@@ -7,3 +7,8 @@ dependencies:
   - pip:
     - xmltodict
     - requests
+    - joblib
+    - tqdm
+    - networkx
+    - pyteomics
+    - pyyaml
