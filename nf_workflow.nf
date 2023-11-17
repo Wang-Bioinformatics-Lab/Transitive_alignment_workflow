@@ -43,8 +43,8 @@ process filterNetworkTransitive {
 
 workflow {
     // Preps input spectrum files
-    input_spectra_ch = Channel.fromPath(params.input_spectra+'/*.mgf')
-    input_pairs_ch = Channel.fromPath(params.input_pairs+'/*.tsv')
+    input_spectra_ch = Channel.fromPath(params.input_spectra+'/specs_ms.mgf')
+    input_pairs_ch = Channel.fromPath(params.input_pairs+'/merged_pairs.tsv')
 
     // Filtering the network
     filtered_networking_pairs_ch = filterNetworkTransitive(input_pairs_ch, input_spectra_ch)
