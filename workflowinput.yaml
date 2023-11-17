@@ -17,7 +17,7 @@ parameterlist:
       formvalue: ""
       targettaskfolder: input_spectra
       optional: false
-      selectsinglefile: true
+      selectsinglefile: false
       folderunroll: true
 
     - displayname: Input Pairs Folder
@@ -27,7 +27,7 @@ parameterlist:
       formvalue: ""
       targettaskfolder: input_pairs
       optional: false
-      selectsinglefile: true
+      selectsinglefile: false
       folderunroll: true
 
     - displayname: Network Topology Parameters
