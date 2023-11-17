@@ -21,7 +21,7 @@ process filterNetworkTransitive {
 
     cache false
 
-    cpus 4
+    cpus 30
 
     input:
     file input_pairs
@@ -34,7 +34,7 @@ process filterNetworkTransitive {
     python $TOOL_FOLDER/scripts/transitive_alignment.py \
     -c ${input_spectra} \
     -m ${input_pairs} \
-    -p 4 \
+    -p 30 \
     -th $params.topology_cliquemincosine \
     -r filtered_pairs.tsv \
     --minimum_score $params.networking_min_cosine
