@@ -21,7 +21,7 @@ process filterNetworkTransitive {
 
     cache false
 
-    cpus 2
+    cpus 4
 
     input:
     file input_pairs
@@ -34,7 +34,7 @@ process filterNetworkTransitive {
     python $TOOL_FOLDER/scripts/transitive_alignment.py \
     -c ${input_spectra} \
     -m ${input_pairs} \
-    -p 2 \
+    -p 4 \
     -th $params.topology_cliquemincosine \
     -r filtered_pairs.tsv \
     --minimum_score $params.networking_min_cosine
@@ -43,8 +43,8 @@ process filterNetworkTransitive {
 
 workflow {
     // Preps input spectrum files
-    input_spectra_ch = Channel.fromPath(params.input_spectra+'/specs_ms.mgf')
-    input_pairs_ch = Channel.fromPath(params.input_pairs+'/merged_pairs.tsv')
+    input_spectra_ch = Channel.fromPath(params.input_spectra+'/*.mgf')
+    input_pairs_ch = Channel.fromPath(params.input_pairs+'/*.tsv')
 
     // Filtering the network
     filtered_networking_pairs_ch = filterNetworkTransitive(input_pairs_ch, input_spectra_ch)
