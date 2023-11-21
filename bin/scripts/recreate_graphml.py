@@ -38,8 +38,15 @@ def main():
             continue
 
         # Add edges with attributes
-        G.add_edge(edge[0],edge[1], deltamz=0, score=0)
-    
+        G.add_edge(edge[0],edge[1])
+        G[edge[0]][edge[1]]["deltamz"] = 0
+        G[edge[0]][edge[1]]["deltamz_int"] = 0
+        G[edge[0]][edge[1]]["score"] = 0
+        G[edge[0]][edge[1]]["matched_peaks"] = "0"
+        G[edge[0]][edge[1]]["scan1"] = 0
+        G[edge[0]][edge[1]]["scan2"] = 0
+        G[edge[0]][edge[1]]["component"] = "N/A"
+
     #write the graphml file
     nx.write_graphml(G, output_graphml)
 
