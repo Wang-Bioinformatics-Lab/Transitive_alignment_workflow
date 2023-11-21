@@ -31,21 +31,21 @@ def main():
     # Add edges from G_all_pairs to G
     for edge in G_all_pairs.edges():
         # checking if nodes are in G
-        if edge[0] not in G.nodes():
+        if str(edge[0]) not in G.nodes():
             continue
         
-        if edge[1] not in G.nodes():
+        if str(edge[1]) not in G.nodes():
             continue
 
         # Add edges with attributes
-        G.add_edge(edge[0],edge[1])
-        G[edge[0]][edge[1]]["deltamz"] = 0
-        G[edge[0]][edge[1]]["deltamz_int"] = 0
-        G[edge[0]][edge[1]]["score"] = 0
-        G[edge[0]][edge[1]]["matched_peaks"] = "0"
-        G[edge[0]][edge[1]]["scan1"] = 0
-        G[edge[0]][edge[1]]["scan2"] = 0
-        G[edge[0]][edge[1]]["component"] = "N/A"
+        G.add_edge(str(edge[0]),str(edge[1]))
+        G[str(edge[0])][str(edge[1])]["deltamz"] = 0
+        G[str(edge[0])][str(edge[1])]["deltamz_int"] = 0
+        G[str(edge[0])][str(edge[1])]["score"] = 0
+        G[str(edge[0])][str(edge[1])]["matched_peaks"] = "0"
+        G[str(edge[0])][str(edge[1])]["scan1"] = 0
+        G[str(edge[0])][str(edge[1])]["scan2"] = 0
+        G[str(edge[0])][str(edge[1])]["component"] = "N/A"
 
     #write the graphml file
     nx.write_graphml(G, output_graphml)
