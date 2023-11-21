@@ -51,7 +51,7 @@ process recreateGraphML {
     file filtered_networking_pairs
 
     output:
-    file "network.graphml"
+    file "network"
     file "spectra"
 
     """

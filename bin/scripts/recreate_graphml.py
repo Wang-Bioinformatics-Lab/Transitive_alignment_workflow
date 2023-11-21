@@ -31,7 +31,7 @@ def main():
     # Add edges from G_all_pairs to G
     for edge in G_all_pairs.edges():
         # Add edges with attributes
-        G.add_edge(edge[0],edge[1], deltamz=0)
+        G.add_edge(edge[0],edge[1], deltamz=0, score=0)
     
     #write the graphml file
     nx.write_graphml(G, output_graphml)
