@@ -1,19 +1,12 @@
 name: Transitive_alignment_workflow
 displayname: STUFF
 Views:
--   name: Summary List
-    displayname: Summary List
-    viewname: summarylist
-    displaytype: datatable
+-   name: Visualize Network in Browser
+    displayname: Visualize Full Network in Browser
+    viewname: visualizefullnetwork
+    displaytype: linkout
     parameters:
-        filename: output/summary.tsv
-        columns:
-            -   title: "View LCMS"
-                data: filename
-            -   title: "filename"
-                data: filename
-        columnDefs: '[ {"targets": 0,"data": null,"render": function ( data, type, row, meta ) {
-            return `
-            <a target="_blank" href="/dashboards/lcms?usi=mzspec:GNPS2-${task}:${encodeURIComponent(row["filename"])}">View LCMS - mzspec:GNPS2-${task}:${row["filename"]}</a>
-            `;}}]'
-            
+        baseurl: /dashboards/networkviewer
+        urlparam:
+            -   usi:mzdata:OMETATASK-[task]:nf_output/network/network.graphml
+            -   usi-mgf:mzdata:OMETATASK-[task]:nf_output/spectra/specs_ms.mgf

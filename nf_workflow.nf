@@ -18,8 +18,6 @@ process filterNetworkTransitive {
 
     conda "$TOOL_FOLDER/conda_env.yml"
 
-    cache false
-
     cpus 16
 
     input:
@@ -48,17 +46,23 @@ process recreateGraphML {
     cache false
 
     input:
+    file input_mgf
     file input_graphml
     file filtered_networking_pairs
 
     output:
-    file "filtered_graphml.graphml"
+    file "network.graphml"
+    file "spectra"
 
     """
+    mkdir spectra
+    cp ${input_mgf} spectra/specs_ms.mgf
+
+    mkdir network
     python $TOOL_FOLDER/scripts/recreate_graphml.py \
     -g ${input_graphml} \
-    -p ${filtered_networking_pairs} \
-    filtered_graphml.graphml
+    -m ${filtered_networking_pairs} \
+    network/network.graphml
     """
 }
 
@@ -72,6 +76,6 @@ workflow {
 
     // Creating graphml
     input_graphml_ch = Channel.fromPath(params.input_graphml)
-    filtered_graphml_ch = recreateGraphML(input_graphml_ch, filtered_networking_pairs_ch)
+    recreateGraphML(input_spectra_ch, input_graphml_ch, filtered_networking_pairs_ch)
 
 }
