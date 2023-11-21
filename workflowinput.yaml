@@ -30,6 +30,16 @@ parameterlist:
       selectsinglefile: false
       folderunroll: true
 
+    - displayname: Input GraphML
+      paramtype: fileselector
+      nf_paramname: input_graphml
+      formplaceholder: Enter the path to input_graphml
+      formvalue: ""
+      targettaskfolder: input_graphml
+      optional: true
+      selectsinglefile: true
+      folderunroll: true
+
     - displayname: Network Topology Parameters
       paramtype: section
 
