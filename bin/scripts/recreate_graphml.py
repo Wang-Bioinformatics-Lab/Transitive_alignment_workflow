@@ -30,6 +30,13 @@ def main():
 
     # Add edges from G_all_pairs to G
     for edge in G_all_pairs.edges():
+        # checking if nodes are in G
+        if edge[0] not in G.nodes():
+            continue
+        
+        if edge[1] not in G.nodes():
+            continue
+
         # Add edges with attributes
         G.add_edge(edge[0],edge[1], deltamz=0, score=0)
     
