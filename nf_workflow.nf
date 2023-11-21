@@ -2,8 +2,8 @@
 nextflow.enable.dsl=2
 
 // Spectra as input
-params.input_spectra = "data/input_spectra"
-params.input_pairs ="data/input_pairs"
+params.input_spectra = "data/input_spectra/specs_ms.mgf"
+params.input_pairs ="data/input_pairs/merged_pairs.tsv"
 
 params.input_graphml = ""
 
@@ -64,8 +64,8 @@ process recreateGraphML {
 
 workflow {
     // Preps input spectrum files
-    input_spectra_ch = Channel.fromPath(params.input_spectra+'/*.mgf')
-    input_pairs_ch = Channel.fromPath(params.input_pairs+'/*.tsv')
+    input_spectra_ch = Channel.fromPath(params.input_spectra)
+    input_pairs_ch = Channel.fromPath(params.input_pairs)
 
     // Filtering the network
     filtered_networking_pairs_ch = filterNetworkTransitive(input_pairs_ch, input_spectra_ch)
