@@ -10,6 +10,7 @@ params.input_graphml = ""
 // Topology Filtering
 params.topology_cliquemincosine = 0.7
 params.networking_min_cosine = 0.7
+params.mst_filter = "No"
 
 TOOL_FOLDER = "$baseDir/bin"
 
@@ -35,6 +36,7 @@ process filterNetworkTransitive {
     -th $params.topology_cliquemincosine \
     -r filtered_pairs.tsv \
     --minimum_score $params.networking_min_cosine
+    --mst_filter $params.mst_filter
     """
 }
 

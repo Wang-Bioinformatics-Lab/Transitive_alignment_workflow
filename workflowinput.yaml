@@ -49,6 +49,17 @@ parameterlist:
       formplaceholder: Enter the topology_cliquemincosine
       formvalue: "0.7"
 
+    - displayname: MST filter option
+      paramtype: select
+      nf_paramname: mst_filter
+      formvalue: "No"
+        options:
+          - value: "Yes"
+            display: "Yes"
+          - value: "No"
+            display: "No"
+
+
 
 
 

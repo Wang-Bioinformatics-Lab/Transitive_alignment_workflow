@@ -162,6 +162,35 @@ def realign_path(path):
     else:
         return "no match",_
 
+def calculate_average_weight(graph):
+    total_weight = sum(graph[u][v]['Cosine'] for u, v in graph.edges())
+    average_weight = total_weight / graph.number_of_edges()
+    return average_weight
+
+def add_edges_to_mst(original_graph, mst):
+    remaining_edges = [(u, v, original_graph[u][v]['Cosine']) for u, v in original_graph.edges() if not mst.has_edge(u, v)]
+    remaining_edges.sort(key=lambda x: x[2], reverse=True)
+
+    average_weight = calculate_average_weight(mst)
+
+    for u, v, weight in remaining_edges:
+        mst.add_edge(u, v, Cosine=weight)
+        new_average_weight = calculate_average_weight(mst)
+        if new_average_weight >= average_weight:
+            mst.remove_edge(u, v)
+            break
+        average_weight = new_average_weight
+
+    return mst
+
+def polish_subgraph(G):
+    if G.number_of_edges() == 0:
+        return G
+    maximum_spanning_tree = nx.maximum_spanning_tree(G, weight='Cosine')
+    polished_subgraph = add_edges_to_mst(G, maximum_spanning_tree)
+    return polished_subgraph
+
+
 def re_alignment_parallel(args):
     node1,node2=args
     #if there is a path between node1 and node2 then try to align them
@@ -286,12 +315,14 @@ if __name__ == '__main__':
     parser.add_argument('-r', type=str, required=False, default="trans_align_result.tsv", help='output filename')
     parser.add_argument('-th', type=float, required=False, default=0.8, help='CAST threshold')
     parser.add_argument('--minimum_score', type=float, required=False, default=0.7, help='Minimum score to keep in output edges')
+    parser.add_argument('--mst_filter', type=str, required=False, default="No", help='Trun on the MST filter')
 
     args = parser.parse_args()
     mgf_filename = args.c
     raw_pairs_filename  = args.m
     processes_number = args.p
     result_file_path = args.r
+    MST_filter = args.mst_filter
 
     #read the raw pairs file
     all_pairs_df = pd.read_csv(raw_pairs_filename, sep='\t')
@@ -321,6 +352,9 @@ if __name__ == '__main__':
     cast_cluster = CAST_cluster(G_all_pairs, args.th)
 
     cast_components = [G_all_pairs.subgraph(c).copy() for c in cast_cluster]
+
+    if MST_filter=="Yes":
+        cast_components = [polish_subgraph(c) for c in cast_components]
 
     output_results=[]
 
