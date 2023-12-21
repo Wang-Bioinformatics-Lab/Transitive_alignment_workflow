@@ -53,11 +53,11 @@ parameterlist:
       paramtype: select
       nf_paramname: mst_filter
       formvalue: "No"
-        options:
-          - value: "Yes"
-            display: "Yes"
-          - value: "No"
-            display: "No"
+      options:
+        - value: "Yes"
+          display: "Yes"
+        - value: "No"
+          display: "No"
 
 
 
