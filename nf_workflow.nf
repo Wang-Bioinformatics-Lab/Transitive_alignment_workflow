@@ -35,7 +35,7 @@ process filterNetworkTransitive {
     -p 16 \
     -th $params.topology_cliquemincosine \
     -r filtered_pairs.tsv \
-    --minimum_score $params.networking_min_cosine
+    --minimum_score $params.networking_min_cosine \
     --mst_filter $params.mst_filter
     """
 }
