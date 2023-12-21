@@ -353,7 +353,7 @@ if __name__ == '__main__':
 
     cast_components = [G_all_pairs.subgraph(c).copy() for c in cast_cluster]
 
-    if MST_filter=="Yes":
+    if (MST_filter=="Yes"):
         cast_components = [polish_subgraph(c) for c in cast_components]
 
     output_results=[]
