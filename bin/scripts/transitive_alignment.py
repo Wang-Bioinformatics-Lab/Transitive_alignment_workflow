@@ -176,7 +176,7 @@ def add_edges_to_mst(original_graph, mst):
     for u, v, weight in remaining_edges:
         mst.add_edge(u, v, Cosine=weight)
         new_average_weight = calculate_average_weight(mst)
-        if new_average_weight >= average_weight:
+        if new_average_weight <= average_weight:
             mst.remove_edge(u, v)
             break
         average_weight = new_average_weight
