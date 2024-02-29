@@ -50,8 +50,8 @@ process Preprocessing {
 process TransitiveAlignment {
     publishDir "./nf_output", mode: 'copy'
     conda "$baseDir/bin/conda_env.yml"
-    cpus 15
-    memory '12 GB'
+    cpus 30
+    memory '23 GB'
 
     input:
     tuple path(chunk),path(spec_dic),file(merged_pairs)
@@ -62,7 +62,7 @@ process TransitiveAlignment {
     script:
     """
     mkdir -p transitive_alignment
-    python $TOOL_FOLDER/Transitive_Alignment.py -s ${spec_dic} -i ${chunk} -m ${merged_pairs} -p 15 -r "transitive_alignment/${chunk.baseName}_realignment.pkl"
+    python $TOOL_FOLDER/Transitive_Alignment.py -s ${spec_dic} -i ${chunk} -m ${merged_pairs} -p 30 -r "transitive_alignment/${chunk.baseName}_realignment.pkl"
     """
 }
 
