@@ -51,7 +51,7 @@ process TransitiveAlignment {
     publishDir "./nf_output", mode: 'copy'
     conda "$baseDir/bin/conda_env.yml"
     cpus 30
-    memory '23 GB'
+    memory '128 GB'
 
     input:
     tuple path(chunk),path(spec_dic),file(merged_pairs)
