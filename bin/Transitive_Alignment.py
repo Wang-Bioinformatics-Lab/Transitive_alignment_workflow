@@ -172,6 +172,8 @@ def re_alignment_parallel(args):
         # find all the shortest path
         all_shortest_hops = [p for p in
                              nx.all_shortest_paths(G_all_pairs, node1, node2, weight=None, method='dijkstra')]
+        if all(len(path) > 4 for path in all_shortest_hops):
+            return
         Max_path_weight = 0
         Max_path = []
         # find the path has the maximum sum of cos score
