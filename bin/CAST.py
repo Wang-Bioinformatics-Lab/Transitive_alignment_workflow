@@ -22,14 +22,14 @@ def load_transitive_alignment_results(folder_path):
                 all_pairs.extend(pairs)
     return all_pairs
 
-def generate_candidates(G, C, S):
-    if (len(C)==1):
-        return [n for n in G.neighbors(C[0]) if n in S]
-    else:
-        res = set([n for n in G.neighbors(C[0])if n in S])
-        for item in C[1:]:
-            res=res & set([n for n in G.neighbors(item)])
-    return list(res)
+# def generate_candidates(G, C, S):
+#     if (len(C)==1):
+#         return [n for n in G.neighbors(C[0]) if n in S]
+#     else:
+#         res = set([n for n in G.neighbors(C[0])if n in S])
+#         for item in C[1:]:
+#             res=res & set([n for n in G.neighbors(item)])
+#     return list(res)
 
 def update_graph_with_alignment_results(G, alignment_results, min_score):
     new_alignment_results = []
@@ -95,6 +95,43 @@ def CAST_cluster(G, theta):
         P.append(C)
         S=[x for x in S if x not in C]
     return P
+def generate_candidates(G, C, S):
+    candidates = set()
+    for node in C:
+        neighbors = set(G.neighbors(node))
+        candidates = candidates.union(neighbors)
+    candidates = candidates.intersection(S)
+    return list(candidates)
+
+def CAST_cluster_greedy(G, theta):
+    sorted_node = list(sorted(G.degree, key=lambda x: x[1], reverse=True))
+    S = [n[0] for n in sorted_node]
+    P = []
+    while len(S):
+        v = S[0]
+        C = [v]
+        candidates = generate_candidates(G, C, S)
+        while len(candidates):
+            can_dic = {}
+            for candidate in candidates:
+                avg_weight = 0
+                count = 0
+                for node in C:
+                    if G.has_edge(candidate, node):
+                        avg_weight +=  G.edges[candidate,node]['Cosine']
+                        count += 1
+                if count > 0:
+                    avg_weight /= count
+                    if avg_weight > theta:
+                        can_dic[candidate] = avg_weight
+            if not can_dic:
+                break
+            close_node = max(can_dic, key=can_dic.get)
+            C.append(close_node)
+            candidates = generate_candidates(G, C, S)
+        P.append(C)
+        S = [x for x in S if x not in C]
+    return P
 
 # Assuming the rest of the code is similar to the provided snippet
 
@@ -105,7 +142,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', type=int, required=False, default=4, help='the number of paralleled processes')
     parser.add_argument('-th', type=float, required=False, default=0.8, help='CAST threshold')
     parser.add_argument('-r', type=str, required=False, default="trans_align_result.tsv", help='output filename')
-    parser.add_argument('--minimum_score', type=float, required=False, default=0.6, help='Minimum score to keep in output edges')
+    parser.add_argument('--minimum_score', type=float, required=False, default=0.5, help='Minimum score to keep in output edges')
     parser.add_argument('--mst_filter', type=str, required=False, default="No", help='Trun on the MST filter')
 
     args = parser.parse_args()
@@ -126,9 +163,11 @@ if __name__ == '__main__':
     alignment_results = load_transitive_alignment_results(transitive_alignment_folder)
     G_all_pairs = update_graph_with_alignment_results(G_all_pairs, alignment_results, min_score)
 
-    cast_cluster = CAST_cluster(G_all_pairs, args.th)
+    cast_cluster = CAST_cluster_greedy(G_all_pairs, args.th)
     # Proceed with the rest of the code to handle CAST clustering results
     cast_components = [G_all_pairs.subgraph(c).copy() for c in cast_cluster]
+    cast_components_length  = [len(c) for c in cast_cluster]
+    print(cast_components_length)
     if (MST_filter=="Yes"):
         cast_components = [polish_subgraph(c) for c in cast_components]
 
