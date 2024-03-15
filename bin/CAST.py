@@ -22,20 +22,20 @@ def load_transitive_alignment_results(folder_path):
                 all_pairs.extend(pairs)
     return all_pairs
 
-# def generate_candidates(G, C, S):
-#     if (len(C)==1):
-#         return [n for n in G.neighbors(C[0]) if n in S]
-#     else:
-#         res = set([n for n in G.neighbors(C[0])if n in S])
-#         for item in C[1:]:
-#             res=res & set([n for n in G.neighbors(item)])
-#     return list(res)
+def generate_candidates(G, C, S):
+    if (len(C)==1):
+        return [n for n in G.neighbors(C[0]) if n in S]
+    else:
+        res = set([n for n in G.neighbors(C[0])if n in S])
+        for item in C[1:]:
+            res=res & set([n for n in G.neighbors(item)])
+    return list(res)
 
 def update_graph_with_alignment_results(G, alignment_results, min_score):
     new_alignment_results = []
     for node1, node2, score in tqdm(alignment_results):
         if score >= min_score:
-            G.add_edge(node1, node2, Cosine=score)
+            G.add_edge(node1, node2, Cosine=score, origin='transitive_alignment')
             new_alignment_results.append((node1, node2, score))
     print(len(new_alignment_results))
     return G
@@ -60,12 +60,31 @@ def add_edges_to_mst(original_graph, mst):
 
     return mst
 
+# def polish_subgraph(G):
+#     if G.number_of_edges() == 0:
+#         return G
+#     maximum_spanning_tree = nx.maximum_spanning_tree(G, weight='Cosine')
+#     polished_subgraph = add_edges_to_mst(G, maximum_spanning_tree)
+#     return polished_subgraph
+
 def polish_subgraph(G):
-    if G.number_of_edges() == 0:
-        return G
-    maximum_spanning_tree = nx.maximum_spanning_tree(G, weight='Cosine')
-    polished_subgraph = add_edges_to_mst(G, maximum_spanning_tree)
-    return polished_subgraph
+    # Filter the graph to include only original edges
+    original_edges_graph = nx.Graph((u, v, d) for u, v, d in G.edges(data=True) if d.get('origin') != 'transitive_alignment')
+    # Attempt to create MST using only original edges
+    try:
+        mst = nx.maximum_spanning_tree(original_edges_graph, weight='Cosine')
+        if len(mst.nodes()) < len(G.nodes()):
+            raise ValueError("MST does not span all nodes with original edges only.")
+    except ValueError:
+        # Original edges alone do not span all nodes; include transitive alignment edges
+        print("MST does not span all nodes with original edges")
+        combined_graph = nx.Graph((u, v, d) for u, v, d in G.edges(data=True))  # This includes all edges
+        mst = nx.maximum_spanning_tree(combined_graph, weight='Cosine')
+        # Incrementally add transitive alignment edges to span all nodes, if necessary
+
+    # Further refinement to add transitive alignment edges only if they improve connectivity can be implemented here
+
+    return mst
 
 def CAST_cluster(G, theta):
     sorted_node=list(sorted(G.degree, key=lambda x: x[1], reverse=True))
@@ -95,7 +114,7 @@ def CAST_cluster(G, theta):
         P.append(C)
         S=[x for x in S if x not in C]
     return P
-def generate_candidates(G, C, S):
+def generate_candidates_greedy(G, C, S):
     candidates = set()
     for node in C:
         neighbors = set(G.neighbors(node))
@@ -110,7 +129,7 @@ def CAST_cluster_greedy(G, theta):
     while len(S):
         v = S[0]
         C = [v]
-        candidates = generate_candidates(G, C, S)
+        candidates = generate_candidates_greedy(G, C, S)
         while len(candidates):
             can_dic = {}
             for candidate in candidates:
@@ -142,7 +161,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', type=int, required=False, default=4, help='the number of paralleled processes')
     parser.add_argument('-th', type=float, required=False, default=0.8, help='CAST threshold')
     parser.add_argument('-r', type=str, required=False, default="trans_align_result.tsv", help='output filename')
-    parser.add_argument('--minimum_score', type=float, required=False, default=0.5, help='Minimum score to keep in output edges')
+    parser.add_argument('--minimum_score', type=float, required=False, default=0.6, help='Minimum score to keep in output edges')
     parser.add_argument('--mst_filter', type=str, required=False, default="No", help='Trun on the MST filter')
 
     args = parser.parse_args()
@@ -158,12 +177,11 @@ if __name__ == '__main__':
     G_all_pairs = nx.from_pandas_edgelist(all_pairs_df, "CLUSTERID1", "CLUSTERID2", "Cosine")
     print(G_all_pairs.number_of_edges())
     args = parser.parse_args()
-    G_all_pairs = nx.Graph()  # Initialize the graph
 
     alignment_results = load_transitive_alignment_results(transitive_alignment_folder)
     G_all_pairs = update_graph_with_alignment_results(G_all_pairs, alignment_results, min_score)
 
-    cast_cluster = CAST_cluster_greedy(G_all_pairs, args.th)
+    cast_cluster = CAST_cluster(G_all_pairs, args.th)
     # Proceed with the rest of the code to handle CAST clustering results
     cast_components = [G_all_pairs.subgraph(c).copy() for c in cast_cluster]
     cast_components_length  = [len(c) for c in cast_cluster]

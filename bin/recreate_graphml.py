@@ -30,7 +30,6 @@ def main():
 
     # Add edges from G_all_pairs to G
     for node1,node2,score in G_all_pairs.edges(data='Cosine'):
-        print(score)
         # checking if nodes are in G
         if str(node1) not in G.nodes():
             continue
