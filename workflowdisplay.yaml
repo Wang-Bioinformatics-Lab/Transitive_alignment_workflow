@@ -1,9 +1,9 @@
-name: template_nextflow_workflow
+name: Transitive_alignment_distributed_workflow
 displayname: STUFF
 Views:
--   name: Summary List
-    displayname: Summary List
-    viewname: summarylist
+-   name: Transitive_alignment_distributed_workflow
+    displayname: Transitive_alignment_distributed_workflow
+    viewname: Transitive_alignment_distributed_workflow
     displaytype: datatable
     parameters:
         filename: output/summary.tsv
