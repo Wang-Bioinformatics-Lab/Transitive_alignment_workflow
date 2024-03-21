@@ -82,8 +82,6 @@ def polish_subgraph(G):
         mst = nx.maximum_spanning_tree(combined_graph, weight='Cosine')
         # Incrementally add transitive alignment edges to span all nodes, if necessary
 
-    # Further refinement to add transitive alignment edges only if they improve connectivity can be implemented here
-
     return mst
 
 def CAST_cluster(G, theta):
@@ -158,7 +156,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Using realignment method to reconstruct the network')
     parser.add_argument('-m', type=str, required=True, default="merged_pairs.tsv", help='raw pairs filename')
     parser.add_argument('-t', type=str, required=True, default="/home/user/LabData/XianghuData/Transitive_Alignment_Distributed/nf_output/transitive_alignment", help='transitive_alignment folder path')
-    parser.add_argument('-p', type=int, required=False, default=4, help='the number of paralleled processes')
     parser.add_argument('-th', type=float, required=False, default=0.8, help='CAST threshold')
     parser.add_argument('-r', type=str, required=False, default="trans_align_result.tsv", help='output filename')
     parser.add_argument('--minimum_score', type=float, required=False, default=0.6, help='Minimum score to keep in output edges')

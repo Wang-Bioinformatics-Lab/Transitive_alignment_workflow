@@ -12,10 +12,49 @@ parameterlist:
 
     - displayname: Input Data Folder
       paramtype: fileselector
-      nf_paramname: input_spectra_folder
+      nf_paramname: input_spectra
       formplaceholder: Enter the path to data
       formvalue: ""
       targettaskfolder: input_spectra
       optional: false
-      selectsinglefile: false
+      selectsinglefile: true
       folderunroll: true
+
+    - displayname: Input Pairs Folder
+      paramtype: fileselector
+      nf_paramname: input_pairs
+      formplaceholder: Enter the path to input_pairs
+      formvalue: ""
+      targettaskfolder: input_pairs
+      optional: false
+      selectsinglefile: true
+      folderunroll: true
+
+    - displayname: Input GraphML
+      paramtype: fileselector
+      nf_paramname: input_graphml
+      formplaceholder: Enter the path to input_graphml
+      formvalue: ""
+      targettaskfolder: input_graphml
+      optional: true
+      selectsinglefile: true
+      folderunroll: true
+
+    - displayname: Network Topology Parameters
+      paramtype: section
+
+    - displayname: Transitive Param - Min Clique Cosine
+      paramtype: text
+      nf_paramname: topology_cliquemincosine
+      formplaceholder: Enter the topology_cliquemincosine
+      formvalue: "0.7"
+
+    - displayname: MST filter option
+      paramtype: select
+      nf_paramname: mst_filter
+      formvalue: "No"
+      options:
+        - value: "Yes"
+          display: "Yes"
+        - value: "No"
+          display: "No"

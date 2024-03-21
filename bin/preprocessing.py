@@ -31,10 +31,15 @@ def read_mgf(filename):
                     key, value = line.split('=')
                     spectrum[key.lower()] = value  # Convert key to lowercase for consistency
                 else:  # Peak line
-                    mz, intensity = line.split()
-                    spectrum['peaks'].append((float(mz), float(intensity)))
-                    spectrum['m/z array'].append(float(mz))
-                    spectrum['intensity array'].append(float(intensity))
+                    try:
+                        mz, intensity = line.split()
+                        spectrum['peaks'].append((float(mz), float(intensity)))
+                        spectrum['m/z array'].append(float(mz))
+                        spectrum['intensity array'].append(float(intensity))
+                    except ValueError:
+                        # Optionally, log a warning about the malformed line
+                        print(f"Warning: Skipping malformed line: '{line}'")
+                        continue
     return spectra
 def mgf_processing(spectra):
     spec_dic = {}
