@@ -75,7 +75,8 @@ process CAST {
     conda "$baseDir/bin/conda_env.yml"
 
     input:
-    path to_merge, stageAs: './trans_align_dir/*' // To avoid naming collisions
+    // To avoid naming collisions
+    path to_merge, stageAs: './trans_align_dir/*'
     file merged_pairs
 
     output:
@@ -85,7 +86,7 @@ process CAST {
     """
     python $TOOL_FOLDER/CAST.py \
     -m ${merged_pairs} \
-    -t  trans_align_dir \
+    -t  ./trans_align_dir \
     -th $params.topology_cliquemincosine \
     -r filtered_pairs.tsv \
     --mst_filter $params.mst_filter
@@ -113,7 +114,7 @@ process recreateGraphML {
     cp ${input_mgf} spectra/specs_ms.mgf
 
     mkdir network
-    python $TOOL_FOLDER/scripts/recreate_graphml.py \
+    python $TOOL_FOLDER/recreate_graphml.py \
     -g ${input_graphml} \
     -m ${filtered_networking_pairs} \
     network/network.graphml

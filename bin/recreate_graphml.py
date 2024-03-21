@@ -10,7 +10,7 @@ def main():
     parser = argparse.ArgumentParser(description='Using realignment method to reconstruct the network')
     parser.add_argument('-g', type=str, required=True, default="network.graphml", help='graphml filename')
     parser.add_argument('-m', type=str, required=True, default="merged_pairs.tsv", help='pairs filename')
-    parser.add_argument('-output_graphml', type=str, default="filtered_graphml.graphml", help='output graphml filename')
+    parser.add_argument('output_graphml', type=str, default="filtered_graphml.graphml", help='output graphml filename')
 
     args = parser.parse_args()
     input_graphml = args.g
