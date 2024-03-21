@@ -75,7 +75,7 @@ process CAST {
     conda "$baseDir/bin/conda_env.yml"
 
     input:
-    path trans_align_dir
+    path to_merge, stageAs: './trans_align_dir/*' // To avoid naming collisions
     file merged_pairs
 
     output:
@@ -85,7 +85,7 @@ process CAST {
     """
     python $TOOL_FOLDER/CAST.py \
     -m ${merged_pairs} \
-    -t  ${trans_align_dir_ch}\
+    -t  trans_align_dir \
     -th $params.topology_cliquemincosine \
     -r filtered_pairs.tsv \
     --mst_filter $params.mst_filter
