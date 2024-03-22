@@ -60,41 +60,41 @@ def add_edges_to_mst(original_graph, mst):
 
     return mst
 
-# def polish_subgraph(G):
-#     if G.number_of_edges() == 0:
-#         return G
-#     maximum_spanning_tree = nx.maximum_spanning_tree(G, weight='Cosine')
-#     polished_subgraph = add_edges_to_mst(G, maximum_spanning_tree)
-#     return polished_subgraph
-
 def polish_subgraph(G):
-    # Create an MST with only original edges
-    original_edges_graph = nx.Graph(
-        (u, v, d) for u, v, d in G.edges(data=True) if d.get('origin') != 'transitive_alignment'
-    )
-    mst = nx.maximum_spanning_tree(original_edges_graph, weight='Cosine')
+    if G.number_of_edges() == 0:
+        return G
+    maximum_spanning_tree = nx.maximum_spanning_tree(G, weight='Cosine')
+    polished_subgraph = add_edges_to_mst(G, maximum_spanning_tree)
+    return polished_subgraph
 
-    # Check if the MST spans all nodes, if not, start adding transitive edges
-    if len(mst.nodes()) < len(G.nodes()):
-        print("Original edges do not span all nodes, adding transitive edges as needed.")
-
-        # For each node not in the MST, try to connect it with the least number of transitive edges
-        for node in G.nodes():
-            if node not in mst.nodes():
-                # Find all transitive edges connecting this node to any node in the MST
-                candidate_edges = [
-                    (u, v, d) for u, v, d in G.edges(node, data=True)
-                    if d.get('origin') == 'transitive_alignment' and (u in mst.nodes() or v in mst.nodes())
-                ]
-                # Sort these edges by weight (assuming higher is better)
-                candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
-
-                # Add the best edge to the MST, if any
-                if candidate_edges:
-                    best_edge = candidate_edges[0]
-                    mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
-
-    return mst
+# def polish_subgraph(G):
+#     # Create an MST with only original edges
+#     original_edges_graph = nx.Graph(
+#         (u, v, d) for u, v, d in G.edges(data=True) if d.get('origin') != 'transitive_alignment'
+#     )
+#     mst = nx.maximum_spanning_tree(original_edges_graph, weight='Cosine')
+#
+#     # Check if the MST spans all nodes, if not, start adding transitive edges
+#     if len(mst.nodes()) < len(G.nodes()):
+#         print("Original edges do not span all nodes, adding transitive edges as needed.")
+#
+#         # For each node not in the MST, try to connect it with the least number of transitive edges
+#         for node in G.nodes():
+#             if node not in mst.nodes():
+#                 # Find all transitive edges connecting this node to any node in the MST
+#                 candidate_edges = [
+#                     (u, v, d) for u, v, d in G.edges(node, data=True)
+#                     if d.get('origin') == 'transitive_alignment' and (u in mst.nodes() or v in mst.nodes())
+#                 ]
+#                 # Sort these edges by weight (assuming higher is better)
+#                 candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
+#
+#                 # Add the best edge to the MST, if any
+#                 if candidate_edges:
+#                     best_edge = candidate_edges[0]
+#                     mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
+#
+#     return mst
 
 def CAST_cluster(G, theta):
     sorted_node=list(sorted(G.degree, key=lambda x: x[1], reverse=True))
