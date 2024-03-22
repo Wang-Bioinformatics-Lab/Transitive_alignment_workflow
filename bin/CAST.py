@@ -64,8 +64,8 @@ def polish_subgraph(G):
     if G.number_of_edges() == 0:
         return G
     maximum_spanning_tree = nx.maximum_spanning_tree(G, weight='Cosine')
-    polished_subgraph = add_edges_to_mst(G, maximum_spanning_tree)
-    return polished_subgraph
+    #polished_subgraph = add_edges_to_mst(G, maximum_spanning_tree)
+    return maximum_spanning_tree
 
 # def polish_subgraph(G):
 #     # Create an MST with only original edges
