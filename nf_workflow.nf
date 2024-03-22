@@ -5,7 +5,7 @@ params.input = "README.md"
 
 TOOL_FOLDER = "$baseDir/bin"
 
-params.merged_pairs = './data/test/merged_pairs.tsv'
+params.input_pairs = './data/test/merged_pairs.tsv'
 params.input_spectra = './data/test/specs_ms.mgf'
 params.n_chunks = 100
 params.raw_pairs = './data/test/merged_pairs.tsv'
@@ -124,7 +124,7 @@ process recreateGraphML {
 workflow {
 
     // Input channels
-    merged_pairs_ch = Channel.fromPath(params.merged_pairs)
+    merged_pairs_ch = Channel.fromPath(params.input_pairs)
     specs_mgf_ch = Channel.fromPath(params.input_spectra)
 
     // Partitioning to create chunk files
