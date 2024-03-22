@@ -8,7 +8,6 @@ TOOL_FOLDER = "$baseDir/bin"
 params.input_pairs = './data/test/merged_pairs.tsv'
 params.input_spectra = './data/test/specs_ms.mgf'
 params.n_chunks = 100
-params.raw_pairs = './data/test/merged_pairs.tsv'
 params.chunk_dir = './chunks/'
 params.spec_dic = 'spec_dic.pkl'
 params.trans_alignment_dir = './transitive_alignment/'
