@@ -1,7 +1,7 @@
-workflowname: Transitive_alignment_workflow
-workflowdescription: This is Transitive alignment workflow for GNPS2
-workflowlongdescription: This is Transitive alignment workflow for GNPS2
-workflowversion: "0.2"
+workflowname: Transitive_alignment_distributed_workflow
+workflowdescription: Transitive_alignment_distributed_workflow
+workflowlongdescription: Transitive_alignment_distributed_workflow
+workflowversion: "0.1"
 workflowfile: nf_workflow.nf
 workflowautohide: false
 adminonly: false
@@ -58,12 +58,3 @@ parameterlist:
           display: "Yes"
         - value: "No"
           display: "No"
-
-
-
-
-
-
-
-
-
