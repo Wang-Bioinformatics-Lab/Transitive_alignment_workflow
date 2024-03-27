@@ -1,4 +1,4 @@
-# Nextflow Template
+# Transitive Alignment Workflow
 
 To run the workflow to test simply do
 
@@ -80,4 +80,35 @@ To deploy to production, use the following command, if you don't have your ssh p
 ```
 make deploy-prod
 ```
+
+# Workflow Script Instructions
+
+The workflow takes three file inputs:
+1. **Input pairs file** (e.g., `merged_pairs.tsv`): Contains the pairs that will be analyzed.
+2. **Input spectra file** (e.g., `specs_ms.mgf`): Contains the mass spectrometry data.
+3. **Input GraphML file** (e.g., `network.graphml`): Contains the network data in GraphML format.
+
+These files can all be obtained using the GNPS Classic molecular network workflow.
+
+## Script Descriptions
+
+### `partition.py`
+- **Purpose**: Partition all the edge pairs that need to be realigned into chunks for efficient processing.
+- **Default Setting**: The number of chunks is set to 100.
+
+### `preprocessing.py`
+- **Purpose**: Preprocess the spectra files to create a spectra dictionary necessary for the following processes.
+
+### `Transitive_Alignment.py`
+- **Purpose**: Perform transitive alignment on a chunk of the edge pairs in parallel to enhance alignment accuracy.
+- **Default Settings**: Utilizes 4 CPUs and allocates 8 GB of memory for each process.
+
+### `CAST.py`
+- **Purpose**: Gather all the realigned edges files, reintegrate the realigned edges into the original graph, and refine the network. It employs the CAST algorithm for network filtering and refines each component based on the Minimum Spanning Tree (MST) algorithm.
+
+### `recreate_graphml.py`
+- **Purpose**: Use the new topology produced by the `CAST.py` script to create a GraphML file, showcasing the results of the Transitive Alignment + CAST approach.
+
+
+
 
