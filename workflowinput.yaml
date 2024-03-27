@@ -1,7 +1,7 @@
-workflowname: Transitive_alignment_distributed_workflow
-workflowdescription: Transitive_alignment_distributed_workflow
-workflowlongdescription: Transitive_alignment_distributed_workflow
-workflowversion: "0.1"
+workflowname: Transitive_alignment_workflow
+workflowdescription: Transitive_alignment_workflow
+workflowlongdescription: Transitive_alignment_workflow
+workflowversion: "0.3"
 workflowfile: nf_workflow.nf
 workflowautohide: false
 adminonly: false

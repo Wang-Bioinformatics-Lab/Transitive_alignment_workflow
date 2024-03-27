@@ -8,9 +8,6 @@ TOOL_FOLDER = "$baseDir/bin"
 params.input_pairs = './data/test/merged_pairs.tsv'
 params.input_spectra = './data/test/specs_ms.mgf'
 params.n_chunks = 100
-params.chunk_dir = './chunks/'
-params.spec_dic = 'spec_dic.pkl'
-params.trans_alignment_dir = './transitive_alignment/'
 params.input_graphml = "./data/test/network.graphml"
 
 // Topology Filtering
@@ -31,7 +28,7 @@ process Partition {
     script:
     """
     mkdir -p chunks
-    python $TOOL_FOLDER/partition.py -m ${merged_pairs} --n_chunks ${n_chunks}
+    python $TOOL_FOLDER/scripts/partition.py -m ${merged_pairs} --n_chunks ${n_chunks}
     """
 }
 
@@ -46,7 +43,7 @@ process Preprocessing {
 
     script:
     """
-    python $TOOL_FOLDER/preprocessing.py -c ${specs_mgf}
+    python $TOOL_FOLDER/scripts/preprocessing.py -c ${specs_mgf}
     """
 }
 
@@ -65,7 +62,7 @@ process TransitiveAlignment {
     script:
     """
     mkdir -p transitive_alignment
-    python $TOOL_FOLDER/Transitive_Alignment.py -s ${spec_dic} -i ${chunk} -m ${merged_pairs} -p 30 -r "transitive_alignment/${chunk.baseName}_realignment.pkl"
+    python $TOOL_FOLDER/scripts/Transitive_Alignment.py -s ${spec_dic} -i ${chunk} -m ${merged_pairs} -p 30 -r "transitive_alignment/${chunk.baseName}_realignment.pkl"
     """
 }
 
@@ -83,7 +80,7 @@ process CAST {
 
     script:
     """
-    python $TOOL_FOLDER/CAST.py \
+    python $TOOL_FOLDER/scripts/CAST.py \
     -m ${merged_pairs} \
     -t  ./trans_align_dir \
     -th $params.topology_cliquemincosine \
@@ -113,7 +110,7 @@ process recreateGraphML {
     cp ${input_mgf} spectra/specs_ms.mgf
 
     mkdir network
-    python $TOOL_FOLDER/recreate_graphml.py \
+    python $TOOL_FOLDER/scripts/recreate_graphml.py \
     -g ${input_graphml} \
     -m ${filtered_networking_pairs} \
     network/network.graphml

@@ -1,4 +1,4 @@
-name: Transitive_alignment_distributed_workflow
+name: Transitive_alignment_workflow
 displayname: STUFF
 Views:
 -   name: Visualize Network in Browser
