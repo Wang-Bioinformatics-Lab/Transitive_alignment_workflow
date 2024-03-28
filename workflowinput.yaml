@@ -1,7 +1,7 @@
 workflowname: Transitive_alignment_workflow
-workflowdescription: This is Transitive alignment workflow for GNPS2
-workflowlongdescription: This is Transitive alignment workflow for GNPS2
-workflowversion: "0.2"
+workflowdescription: Transitive_alignment_workflow
+workflowlongdescription: Transitive_alignment_workflow
+workflowversion: "0.3"
 workflowfile: nf_workflow.nf
 workflowautohide: false
 adminonly: false
@@ -54,16 +54,11 @@ parameterlist:
       nf_paramname: mst_filter
       formvalue: "No"
       options:
-        - value: "Yes"
-          display: "Yes"
+        - value: "Pure_MST"
+          display: "Pure MST"
+        - value: "Greedy_MST"
+          display: "Greedy MST"
+        - value: "Hybrid_MST"
+          display: "Hybrid MST"
         - value: "No"
           display: "No"
-
-
-
-
-
-
-
-
-
