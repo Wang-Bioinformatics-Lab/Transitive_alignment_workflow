@@ -39,8 +39,8 @@ def main():
 
         # Add edges with attributes
         G.add_edge(str(node1), str(node2))
-        G[str(node1)][str(node2)]["deltamz"] = abs(G.nodes[str(node1)]['m/z'] - G.nodes[str(node2)]['m/z'])
-        G[str(node1)][str(node2)]["deltamz_int"] = int(abs(G.nodes[str(node1)]['m/z'] - G.nodes[str(node2)]['m/z']))
+        G[str(node1)][str(node2)]["deltamz"] = abs(G.nodes[str(node1)]['mz'] - G.nodes[str(node2)]['mz'])
+        G[str(node1)][str(node2)]["deltamz_int"] = int(abs(G.nodes[str(node1)]['mz'] - G.nodes[str(node2)]['mz']))
         G[str(node1)][str(node2)]["score"] = score
         G[str(node1)][str(node2)]["matched_peaks"] = "0"
         G[str(node1)][str(node2)]["scan1"] = 0
