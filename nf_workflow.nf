@@ -30,7 +30,6 @@ process Partition {
 }
 
 process Preprocessing {
-    publishDir "./nf_output", mode: 'copy'
     conda "$baseDir/bin/conda_env.yml"
     input:
     path specs_mgf
