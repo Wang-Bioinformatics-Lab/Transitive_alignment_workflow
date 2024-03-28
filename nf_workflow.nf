@@ -1,8 +1,6 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
-params.input = "README.md"
-
 TOOL_FOLDER = "$baseDir/bin"
 
 params.input_pairs = './data/test/merged_pairs.tsv'
