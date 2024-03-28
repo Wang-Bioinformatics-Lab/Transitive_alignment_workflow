@@ -44,7 +44,6 @@ process Preprocessing {
 }
 
 process TransitiveAlignment {
-    publishDir "./nf_output", mode: 'copy'
     conda "$baseDir/bin/conda_env.yml"
     cpus 4
     memory '8 GB'
