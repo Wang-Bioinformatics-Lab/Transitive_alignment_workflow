@@ -16,7 +16,6 @@ params.networking_min_cosine = 0.4
 params.mst_filter = "Yes"
 
 process Partition {
-    publishDir "./nf_output", mode: 'copy'
     conda "$baseDir/bin/conda_env.yml"
     input:
     file merged_pairs
