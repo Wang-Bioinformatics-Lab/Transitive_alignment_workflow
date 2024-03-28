@@ -54,11 +54,11 @@ parameterlist:
       nf_paramname: mst_filter
       formvalue: "No"
       options:
-        - value: "Pure MST"
+        - value: "Pure_MST"
           display: "Pure MST"
-        - value: "Greedy MST"
+        - value: "Greedy_MST"
           display: "Greedy MST"
-        - value: "Hybrid MST"
+        - value: "Hybrid_MST"
           display: "Hybrid MST"
         - value: "No"
           display: "No"

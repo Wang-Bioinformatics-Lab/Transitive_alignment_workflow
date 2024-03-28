@@ -201,11 +201,11 @@ if __name__ == '__main__':
     cast_components = [G_all_pairs.subgraph(c).copy() for c in cast_cluster]
     cast_components_length  = [len(c) for c in cast_cluster]
     print(cast_components_length)
-    if (MST_filter=="Pure MST"):
+    if (MST_filter=="Pure_MST"):
         cast_components = [polish_subgraph_Pure_MST(c) for c in cast_components]
-    elif (MST_filter=="Greedy MST"):
+    elif (MST_filter=="Greedy_MST"):
         cast_components = [polish_subgraph_Geedy_MST(c) for c in cast_components]
-    elif (MST_filter=="Hybrid MST"):
+    elif (MST_filter=="Hybrid_MST"):
         cast_components = [polish_subgraph_hybrid_MST(c) for c in cast_components]
 
     output_results=[]
