@@ -57,7 +57,7 @@ process TransitiveAlignment {
     script:
     """
     mkdir -p transitive_alignment
-    python $TOOL_FOLDER/scripts/Transitive_Alignment.py -s ${spec_dic} -i ${chunk} -m ${merged_pairs} -p 30 -r "transitive_alignment/${chunk.baseName}_realignment.pkl"
+    python $TOOL_FOLDER/scripts/Transitive_Alignment.py -s ${spec_dic} -i ${chunk} -m ${merged_pairs} -p 4 -r "transitive_alignment/${chunk.baseName}_realignment.pkl"
     """
 }
 
