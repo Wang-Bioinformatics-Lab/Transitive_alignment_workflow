@@ -211,9 +211,17 @@ if __name__ == '__main__':
 
     # read the raw pairs file
     all_pairs_df = pd.read_csv(raw_pairs_filename, sep='\t')
+
+    # Anoother format
+    if not "CLUSTERID1" in all_pairs_df.columns:
+        # rename columns
+        all_pairs_df.rename(columns={"scan1": "CLUSTERID1", "scan2": "CLUSTERID2", "score": "Cosine"}, inplace=True)
+
     # constructed network from edge list
     G_all_pairs = nx.from_pandas_edgelist(all_pairs_df, "CLUSTERID1", "CLUSTERID2", "Cosine")
+    
     print(G_all_pairs.number_of_nodes())
+    
     largest_diameter = 0
     for component in nx.connected_components(G_all_pairs):
         subgraph = G_all_pairs.subgraph(component)
