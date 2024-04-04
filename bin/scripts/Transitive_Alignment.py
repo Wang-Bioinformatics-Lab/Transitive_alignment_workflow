@@ -221,15 +221,6 @@ if __name__ == '__main__':
     G_all_pairs = nx.from_pandas_edgelist(all_pairs_df, "CLUSTERID1", "CLUSTERID2", "Cosine")
     
     print(G_all_pairs.number_of_nodes())
-    
-    largest_diameter = 0
-    for component in nx.connected_components(G_all_pairs):
-        subgraph = G_all_pairs.subgraph(component)
-        # Calculate the diameter of this component
-        component_diameter = nx.diameter(subgraph)
-        # Update the largest diameter if this component's diameter is larger
-        largest_diameter = max(largest_diameter, component_diameter)
-        print(largest_diameter)
 
     # reload
     with open(spec_dic_path, 'rb') as input_file:
@@ -244,7 +235,7 @@ if __name__ == '__main__':
 
 
 
-    with Pool(processes=args.p, maxtasksperchild=1000) as pool:
+    with Pool(processes=processes_number, maxtasksperchild=1000) as pool:
         results = list(pool.imap(re_alignment_parallel, values))
 
     # Fitlering no results
