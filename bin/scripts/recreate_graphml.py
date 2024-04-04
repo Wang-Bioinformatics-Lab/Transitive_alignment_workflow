@@ -19,6 +19,12 @@ def main():
 
     # read the raw pairs file
     all_pairs_df = pd.read_csv(input_pairs, sep='\t')
+
+    # Anoother format
+    if not "CLUSTERID1" in all_pairs_df.columns:
+        # rename columns
+        all_pairs_df.rename(columns={"scan1": "CLUSTERID1", "scan2": "CLUSTERID2", "score": "Cosine"}, inplace=True)
+
     # constructed network from edge list
     G_all_pairs = nx.from_pandas_edgelist(all_pairs_df, "CLUSTERID1", "CLUSTERID2", "Cosine")
 
