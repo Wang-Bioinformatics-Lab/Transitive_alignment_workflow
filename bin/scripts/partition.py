@@ -22,10 +22,13 @@ if __name__ == '__main__':
     parser.add_argument('-m', type=str, required=True, default="merged_pairs.tsv", help='raw pairs filename')
     parser.add_argument('--n_chunks', type=int, required=True, help='Number of chunks to partition the pairs into')
     args = parser.parse_args()
+    
     raw_pairs_filename = args.m
     n_chunks = args.n_chunks
+
     # read the raw pairs file
     all_pairs_df = pd.read_csv(raw_pairs_filename, sep='\t')
+
     # constructed network from edge list
     G_all_pairs = nx.from_pandas_edgelist(all_pairs_df, "CLUSTERID1", "CLUSTERID2", "Cosine")
     print(G_all_pairs.number_of_nodes())
@@ -35,6 +38,7 @@ if __name__ == '__main__':
     print(max(component_len))
     node_pairs = [[node1, node2] for [node1, node2] in nx.non_edges(G_all_pairs)]
     chunks = partition(node_pairs, n_chunks)
+    
     # Write the chunks to files
     chunks_directory = f"./chunks/"
     write_chunks_to_files(chunks, chunks_directory)
