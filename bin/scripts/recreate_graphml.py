@@ -53,14 +53,28 @@ def main():
         G[str(node1)][str(node2)]["scan2"] = 0
         G[str(node1)][str(node2)]["component"] = "N/A"
 
-    #relabel the component number
-    component_label = 1
-    for component in nx.connected_components(G):
-        # Set component label for nodes
-        for node in component:
-            G.nodes[node]["component"] = component_label
+    # Identify all connected components
+    components = list(nx.connected_components(G))
 
+    # Sort components by size from largest to smallest
+    sorted_components = sorted(components, key=len, reverse=True)
+
+    # Relabeling subgraphs and their edges more efficiently, from largest to smallest
+    component_label = 1
+    for component in sorted_components:
+        # Create a subgraph for the current component
+        subgraph = G.subgraph(component)
+
+        # Set component label for nodes in the subgraph
+        nx.set_node_attributes(subgraph, component_label, "component")
+
+        # Set component label for edges in the subgraph
+        nx.set_edge_attributes(subgraph, component_label, "component")
+
+        # Increment component_label for the next component
         component_label += 1
+    # write the graphml file
+    nx.write_graphml(G, output_graphml)
 
 
 if __name__ == '__main__':
