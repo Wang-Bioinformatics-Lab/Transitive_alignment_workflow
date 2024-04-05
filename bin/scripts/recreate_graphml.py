@@ -60,12 +60,6 @@ def main():
         for node in component:
             G.nodes[node]["component"] = component_label
 
-        # Set component label for edges within the component
-        for node in component:
-            for neighbor in G.neighbors(node):
-                if neighbor in component:  # Ensure the edge is within the same component
-                    G[node][neighbor]["component"] = str(component_label)
-
         component_label += 1
 
 
