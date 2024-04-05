@@ -56,16 +56,16 @@ def main():
     #relabel the component number
     component_label = 1
     for component in nx.connected_components(G):
-        # Create a subgraph for the current component
-        subgraph = G.subgraph(component)
+        # Set component label for nodes
+        for node in component:
+            G.nodes[node]["component"] = component_label
 
-        # Set component label for nodes in the subgraph
-        nx.set_node_attributes(subgraph, component_label, "component")
+        # Set component label for edges within the component
+        for node in component:
+            for neighbor in G.neighbors(node):
+                if neighbor in component:  # Ensure the edge is within the same component
+                    G[node][neighbor]["component"] = str(component_label)
 
-        # Set component label for edges in the subgraph
-        nx.set_edge_attributes(subgraph, component_label, "component")
-
-        # Increment component_label for the next component
         component_label += 1
 
 
