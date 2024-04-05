@@ -63,7 +63,7 @@ def main():
         nx.set_node_attributes(subgraph, component_label, "component")
 
         # Set component label for edges in the subgraph
-        nx.set_edge_attributes(subgraph, str(component_label), "component")
+        nx.set_edge_attributes(subgraph, component_label, "component")
 
         # Increment component_label for the next component
         component_label += 1
