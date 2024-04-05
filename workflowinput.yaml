@@ -49,6 +49,12 @@ parameterlist:
       formplaceholder: Enter the topology_cliquemincosine
       formvalue: "0.7"
 
+    - displayname: Transitive Param - Min Transitive Alignment Score
+      paramtype: text
+      nf_paramname: networking_min_cosine
+      formplaceholder: Enter the Min networking_min_cosine
+      formvalue: "0.4"
+
     - displayname: MST filter option
       paramtype: select
       nf_paramname: mst_filter
