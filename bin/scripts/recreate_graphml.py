@@ -53,6 +53,13 @@ def main():
         G[str(node1)][str(node2)]["scan2"] = 0
         G[str(node1)][str(node2)]["component"] = "N/A"
 
+    #relabel the component number
+    component_label = 1
+    for component in nx.connected_components(G):
+        for node in component:
+            G.nodes[node]["component"] = component_label
+        component_label += 1
+
     # write the graphml file
     nx.write_graphml(G, output_graphml)
 
