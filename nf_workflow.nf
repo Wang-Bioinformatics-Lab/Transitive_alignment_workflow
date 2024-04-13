@@ -136,6 +136,7 @@ workflow {
     // Creating graphml
     input_graphml_ch = Channel.fromPath(params.input_graphml)
     recreateGraphML(specs_mgf_ch, input_graphml_ch, filtered_networking_pairs_ch)
+    // print out the debug info
     debug_info_ch.subscribe { file ->
         println("Debug info from CAST process:")
         file.readLines().each { line ->
