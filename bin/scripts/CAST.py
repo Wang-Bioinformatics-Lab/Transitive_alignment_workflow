@@ -206,7 +206,7 @@ if __name__ == '__main__':
     # Example debug message
     original_edges = G_all_pairs.number_of_edges()
     original_nodes = G_all_pairs.number_of_nodes()
-    network_density = nx.density(G_all_pairs)
+    network_density = (2*original_edges)/(original_nodes*(original_nodes-1))
     logging.info(f"Original number of edges:{original_edges}",)
     logging.info(f"Original number of nodes:{original_nodes}", )
     logging.info(f"Network density:{network_density}")
