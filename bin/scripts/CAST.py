@@ -11,6 +11,11 @@ from typing import List, Tuple
 import argparse
 import pickle
 
+import logging
+import sys
+logging.basicConfig(filename='python_debug.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
 def load_transitive_alignment_results(folder_path):
     all_pairs = []
     for filename in os.listdir(folder_path):
@@ -197,6 +202,14 @@ if __name__ == '__main__':
     # constructed network from edge list
     G_all_pairs = nx.from_pandas_edgelist(all_pairs_df, "CLUSTERID1", "CLUSTERID2", "Cosine")
     print(G_all_pairs.number_of_edges())
+
+    # Example debug message
+    original_edges = G_all_pairs.number_of_edges()
+    original_nodes = G_all_pairs.number_of_nodes()
+    network_density = nx.density(G_all_pairs)
+    logging.info(f"Original number of edges:{original_edges}",)
+    logging.info(f"Original number of nodes:{original_nodes}", )
+    logging.info(f"Network density:{network_density}")
 
     alignment_results = load_transitive_alignment_results(transitive_alignment_folder)
     G_all_pairs = update_graph_with_alignment_results(G_all_pairs, alignment_results, min_score)
