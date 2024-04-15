@@ -12,5 +12,3 @@ dependencies:
     - networkx
     - pyteomics
     - pyyaml
-    - altair
-    - vega
