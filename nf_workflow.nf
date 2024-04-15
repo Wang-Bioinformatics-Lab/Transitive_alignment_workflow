@@ -72,6 +72,7 @@ process CAST {
 
     output:
     file "filtered_pairs.tsv"
+    path "python_debug.log"
 
     script:
     """
@@ -131,8 +132,15 @@ workflow {
     trans_align_dir_ch = trans_align_ch.collect()
 
     // Filtering the network
-    filtered_networking_pairs_ch = CAST(trans_align_dir_ch, merged_pairs_ch)
+    (filtered_networking_pairs_ch,debug_info_ch) = CAST(trans_align_dir_ch, merged_pairs_ch)
     // Creating graphml
     input_graphml_ch = Channel.fromPath(params.input_graphml)
     recreateGraphML(specs_mgf_ch, input_graphml_ch, filtered_networking_pairs_ch)
+    // print out the debug info
+    debug_info_ch.subscribe { file ->
+        println("Debug info from CAST process:")
+        file.readLines().each { line ->
+            println(line)
+        }
+    }
 }
