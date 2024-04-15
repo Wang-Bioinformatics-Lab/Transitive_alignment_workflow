@@ -10,6 +10,7 @@ from typing import List, Tuple
 # import matplotlib
 # matplotlib.use('Agg')
 # import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
 import argparse
 import pickle
@@ -179,26 +180,22 @@ def CAST_cluster_greedy(G, theta):
         S = [x for x in S if x not in C]
     return P
 
-# def plot_debug(G_all_pairs):
-#     degree_sequence = sorted([d for n, d in G_all_pairs.degree()], reverse=True)
-#
-#     # Count the number of occurrences of each degree value
-#     degree_counts = collections.Counter(degree_sequence)
-#     deg, cnt = zip(*degree_counts.items())
-#
-#     # Prepare the log-log scatter plot with node count on x-axis and degree on y-axis
-#     plt.figure(figsize=(10, 5))
-#     plt.scatter(cnt, deg, color='b')
-#
-#     # Labeling the axes and the plot
-#     plt.title("Node Count vs Node Degree")
-#     plt.xlabel("Node Count")
-#     plt.ylabel("Node Degree")
-#
-#     # Adding grid lines for better readability
-#     plt.grid(True)
-#
-#     plt.savefig("degree_loglog_plot.png")
+def plot_debug(G_all_pairs):
+    degree_sequence = sorted([d for n, d in G_all_pairs.degree()], reverse=True)
+
+    # Count the number of occurrences of each degree value
+    degree_counts = collections.Counter(degree_sequence)
+    deg, cnt = zip(*degree_counts.items())
+
+    # Creating the plot using Plotly
+    fig = go.Figure(data=go.Scatter(x=cnt, y=deg, mode='markers',
+                                    marker=dict(color='Blue', size=10)))
+    fig.update_layout(title='Node Count vs Node Degree',
+                      xaxis_title='Node Count',
+                      yaxis_title='Node Degree',
+                      )
+
+    fig.write_html("degree_loglog_plot.html")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Using realignment method to reconstruct the network')
@@ -235,7 +232,7 @@ if __name__ == '__main__':
     logging.info(f"Original number of nodes:{original_nodes}", )
     logging.info(f"Network density:{network_density}")
 
-    # plot_debug(G_all_pairs)
+    plot_debug(G_all_pairs)
 
     alignment_results = load_transitive_alignment_results(transitive_alignment_folder)
     G_all_pairs = update_graph_with_alignment_results(G_all_pairs, alignment_results, min_score)
