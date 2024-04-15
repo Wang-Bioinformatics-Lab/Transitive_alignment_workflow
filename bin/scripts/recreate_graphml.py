@@ -56,8 +56,14 @@ def main():
     # Identify all connected components
     components = list(nx.connected_components(G))
 
+    filtered_components = []
+    for component in components:
+        if len(component) >= 2:
+            filtered_components.append(component)
+
     # Sort components by size from largest to smallest
-    sorted_components = sorted(components, key=len, reverse=True)
+    sorted_components = sorted(filtered_components, key=len, reverse=True)
+
 
     # Relabeling subgraphs and their edges more efficiently, from largest to smallest
     component_label = 1
