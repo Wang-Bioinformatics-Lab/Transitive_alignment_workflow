@@ -13,3 +13,4 @@ dependencies:
     - pyteomics
     - pyyaml
     - altair
+    - vega
