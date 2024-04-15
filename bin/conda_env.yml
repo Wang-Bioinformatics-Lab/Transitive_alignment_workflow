@@ -12,4 +12,4 @@ dependencies:
     - networkx
     - pyteomics
     - pyyaml
-    - plotly
+    - altair

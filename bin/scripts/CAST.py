@@ -10,7 +10,7 @@ from typing import List, Tuple
 # import matplotlib
 # matplotlib.use('Agg')
 # import matplotlib.pyplot as plt
-import plotly.graph_objects as go
+import altair as alt
 
 import argparse
 import pickle
@@ -185,17 +185,18 @@ def plot_debug(G_all_pairs):
 
     # Count the number of occurrences of each degree value
     degree_counts = collections.Counter(degree_sequence)
-    deg, cnt = zip(*degree_counts.items())
+    # deg, cnt = zip(*degree_counts.items())
+    data = pd.DataFrame(list(degree_counts.items()), columns=['Degree', 'Count'])
 
-    # Creating the plot using Plotly
-    fig = go.Figure(data=go.Scatter(x=cnt, y=deg, mode='markers',
-                                    marker=dict(color='Blue', size=10)))
-    fig.update_layout(title='Node Count vs Node Degree',
-                      xaxis_title='Node Count',
-                      yaxis_title='Node Degree',
-                      )
+    # Create an Altair chart, note the switch of axes compared to the matplotlib example
+    chart = alt.Chart(data).mark_point().encode(
+        x=alt.X('Count', title='Node Count'),
+        y=alt.Y('Degree', title='Degree')
+    ).properties(
+        title='Node Degree Distribution'
+    )
 
-    fig.write_html("degree_loglog_plot.html")
+    chart.save("degree_loglog_plot.html")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Using realignment method to reconstruct the network')
