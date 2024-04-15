@@ -7,6 +7,7 @@ import numpy as np
 from multiprocessing import Pool
 import collections
 from typing import List, Tuple
+import matplotlib.pyplot as plt
 
 import argparse
 import pickle
@@ -14,6 +15,9 @@ import pickle
 import logging
 import sys
 logging.basicConfig(filename='python_debug.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.getLogger('matplotlib.pyplot').setLevel(logging.WARNING)
+logging.getLogger('matplotlib.font_manager').setLevel(logging.WARNING)
+
 
 
 def load_transitive_alignment_results(folder_path):
@@ -173,7 +177,26 @@ def CAST_cluster_greedy(G, theta):
         S = [x for x in S if x not in C]
     return P
 
-# Assuming the rest of the code is similar to the provided snippet
+def plot_debug(G_all_pairs):
+    degree_sequence = sorted([d for n, d in G_all_pairs.degree()], reverse=True)
+
+    # Count the number of occurrences of each degree value
+    degree_counts = collections.Counter(degree_sequence)
+    deg, cnt = zip(*degree_counts.items())
+
+    # Prepare the log-log scatter plot with node count on x-axis and degree on y-axis
+    plt.figure(figsize=(10, 5))
+    plt.scatter(cnt, deg, color='b')
+
+    # Labeling the axes and the plot
+    plt.title("Node Count vs Node Degree")
+    plt.xlabel("Node Count")
+    plt.ylabel("Node Degree")
+
+    # Adding grid lines for better readability
+    plt.grid(True)
+
+    plt.savefig("degree_loglog_plot.png")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Using realignment method to reconstruct the network')
@@ -190,7 +213,6 @@ if __name__ == '__main__':
     min_score = args.minimum_score
     result_file_path = args.r
     MST_filter = args.mst_filter
-
     # read the raw pairs file
     all_pairs_df = pd.read_csv(raw_pairs_filename, sep='\t')
 
@@ -210,6 +232,8 @@ if __name__ == '__main__':
     logging.info(f"Original number of edges:{original_edges}",)
     logging.info(f"Original number of nodes:{original_nodes}", )
     logging.info(f"Network density:{network_density}")
+
+    plot_debug(G_all_pairs)
 
     alignment_results = load_transitive_alignment_results(transitive_alignment_folder)
     G_all_pairs = update_graph_with_alignment_results(G_all_pairs, alignment_results, min_score)
