@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python=3.8.8
   - pandas
+  - matplotlib
   - pip:
     - xmltodict
     - requests
@@ -12,4 +13,3 @@ dependencies:
     - networkx
     - pyteomics
     - pyyaml
-    - matplotlib

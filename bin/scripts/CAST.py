@@ -7,6 +7,8 @@ import numpy as np
 from multiprocessing import Pool
 import collections
 from typing import List, Tuple
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 import argparse
