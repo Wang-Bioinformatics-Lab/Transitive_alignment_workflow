@@ -186,7 +186,9 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
             except nx.NetworkXNoPath:
                 continue
         return best_paths
-
+    nodes_within_hops = nx.single_source_shortest_path_length(G, source, cutoff=max_hops)
+    subgraph = G.subgraph(nodes_within_hops).copy()
+    subgraph_list = list(subgraph.nodes())
     tran_align_node_list = []
     tran_align_node_list.append(source)
     # Step 1: Compute best paths from source to all reachable nodes
@@ -209,10 +211,7 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
             print(path)
             break
     # Step 3: Generate the induced subgraph within max_hops from the source
-    nodes_within_hops = nx.single_source_shortest_path_length(G, source, cutoff=max_hops)
-    subgraph = G.subgraph(nodes_within_hops).copy()
-    subgraph_list = list(subgraph.nodes())
-    neighbors_list = list(subgraph.neighbors(source))
+    neighbors_list = list(G.neighbors(source))
     uni_trans_set = set(neighbors_list) | set(tran_align_node_list)
     induced_nodes_list = list(uni_trans_set & set(subgraph_list))
     induced_subgraph = G.subgraph(induced_nodes_list).copy()
