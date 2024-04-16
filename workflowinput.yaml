@@ -85,6 +85,16 @@ parameterlist:
     - displayname: Induced Network Parameters
       paramtype: section
 
+    - displayname: Induced Network Param - Option
+      paramtype: select
+      nf_paramname: induced_network_option
+      formvalue: "intersection"
+      options:
+        - value: "intersection"
+          display: "Intersection the Transitive and Max hops"
+        - value: "union"
+          display: "Union the Transitive and Max hops"
+
     - displayname: Induced Network Param - Source node
       paramtype: text
       nf_paramname: source_node

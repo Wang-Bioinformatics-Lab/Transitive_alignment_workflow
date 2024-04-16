@@ -167,8 +167,64 @@ def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hop
     G (nx.Graph): The network graph.
     source (int): The source node ID.
     spec_dic (dict): Dictionary of spectral data.
-    fragment_mz_tolerance (float): The mass/charge tolerance for considering peak alignments.
-    allow_shift (bool): Whether to allow peak shifting in cosine similarity calculations.
+    score_threshold (float): Minimum score to consider for updating the network.
+    max_hops (int): Maximum hops to consider for induced subgraph generation.
+    Returns:
+    nx.Graph: The induced subgraph around the source node with updated edges.
+    """
+    def get_best_paths(G, source):
+        best_paths = {}
+        for target in G.nodes():
+            if target == source:
+                continue
+            try:
+                # Paths with min hops
+                paths = list(nx.all_shortest_paths(G, source, target))
+                # Select path with max sum of cosine scores if multiple shortest paths
+                best_path = max(paths, key=lambda path: sum(G[u][v]['Cosine'] for u, v in zip(path[:-1], path[1:])))
+                best_paths[target] = best_path
+            except nx.NetworkXNoPath:
+                continue
+        return best_paths
+
+    tran_align_node_list = []
+    # Step 1: Compute best paths from source to all reachable nodes
+    best_paths = get_best_paths(G, source)
+    # Step 2: Realign spectra along the best paths and update edges
+    for target, path in best_paths.items():
+        try:
+            # Path realignment
+            aligned_peaks,realigned_score = realign_path(path,spec_dic)
+            # check if two nodes can be aligned
+            if aligned_peaks== "no match":
+                #skip if no peak aligned
+                continue
+            # Check if the new score is above the threshold and the edge does not exist
+            if realigned_score >= score_threshold and not G.has_edge(source, target):
+                G.add_edge(source, target, Cosine=realigned_score)
+                tran_align_node_list.append(target)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            print(path)
+            break
+    # Step 3: Generate the induced subgraph within max_hops from the source
+    nodes_within_hops = nx.single_source_shortest_path_length(G, source, cutoff=max_hops)
+    subgraph = G.subgraph(nodes_within_hops).copy()
+    subgraph_list = list(subgraph.nodes())
+    neighbors_list = list(subgraph.neighbors(source))
+    uni_trans_set = set(neighbors_list) | set(tran_align_node_list)
+    induced_nodes_list = list(uni_trans_set & set(subgraph_list))
+    induced_subgraph = G.subgraph(induced_nodes_list).copy()
+
+    return induced_subgraph
+
+def induced_transitive_network_intersection(G, source, spec_dic, score_threshold=0.3, max_hops=3):
+    """
+    Realigns nodes in the network starting from a source node based on the shortest path with conditions.
+    Args:
+    G (nx.Graph): The network graph.
+    source (int): The source node ID.
+    spec_dic (dict): Dictionary of spectral data.
     score_threshold (float): Minimum score to consider for updating the network.
     max_hops (int): Maximum hops to consider for induced subgraph generation.
     Returns:
@@ -226,6 +282,8 @@ if __name__ == '__main__':
     parser.add_argument('--spec_dic', type=str, required=True, default="spec_dic.pkl", help='spectra dictionary filename')
     parser.add_argument('--minimum_score', type=float, required=False, default=0.6,
                         help='Minimum score to keep in output edges')
+    parser.add_argument('--induced_option', type=str, required=True, default="intersection",
+                        help='induced network options: intersection or union')
     parser.add_argument('output_graphml', type=str, default="filtered_graphml.graphml", help='output graphml filename')
 
     args = parser.parse_args()
@@ -236,6 +294,7 @@ if __name__ == '__main__':
     input_graphml = args.g
     spec_dic_path = args.spec_dic
     min_score = args.minimum_score
+    induced_option = args.induced_option
     # read the raw pairs file
     all_pairs_df = pd.read_csv(raw_pairs_filename, sep='\t')
 
@@ -250,8 +309,10 @@ if __name__ == '__main__':
     # reload
     with open(spec_dic_path, 'rb') as input_file:
         spec_dic = pickle.load(input_file)
-
-    induced_subgraph = induced_transitive_network(G_all_pairs,source,spec_dic,min_score,max_hops)
+    if induced_option == "intersection":
+        induced_subgraph = induced_transitive_network_intersection(G_all_pairs,source,spec_dic,min_score,max_hops)
+    else:
+        induced_subgraph = induced_transitive_network(G_all_pairs,source,spec_dic,min_score,max_hops)
 
     G = nx.read_graphml(input_graphml)
 
