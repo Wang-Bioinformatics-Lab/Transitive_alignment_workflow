@@ -50,8 +50,8 @@ parameterlist:
       options:
         - value: "Transitive_alignment"
           display: "Full Network Transitive Alignment"
-        - value: "Induced Network"
-          display: "Induced_network"
+        - value: "Induced_network"
+          display: "Induced Network"
 
     - displayname: Network Topology Parameters
       paramtype: section
