@@ -160,7 +160,7 @@ def realign_path(path,spec_dic):
 
 
 
-def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hops=3):
+def induced_transitive_network_intersection(G, source, spec_dic, score_threshold=0.3, max_hops=3):
     """
     Realigns nodes in the network starting from a source node based on the shortest path with conditions.
     Args:
@@ -218,7 +218,7 @@ def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hop
 
     return induced_subgraph
 
-def induced_transitive_network_intersection(G, source, spec_dic, score_threshold=0.3, max_hops=3):
+def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hops=3):
     """
     Realigns nodes in the network starting from a source node based on the shortest path with conditions.
     Args:
@@ -311,7 +311,7 @@ if __name__ == '__main__':
         spec_dic = pickle.load(input_file)
     if induced_option == "intersection":
         induced_subgraph = induced_transitive_network_intersection(G_all_pairs,source,spec_dic,min_score,max_hops)
-    else:
+    elif induced_option == "union":
         induced_subgraph = induced_transitive_network(G_all_pairs,source,spec_dic,min_score,max_hops)
 
     G = nx.read_graphml(input_graphml)
