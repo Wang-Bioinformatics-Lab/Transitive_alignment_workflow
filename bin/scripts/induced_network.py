@@ -188,6 +188,7 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
         return best_paths
 
     tran_align_node_list = []
+    tran_align_node_list.append(source)
     # Step 1: Compute best paths from source to all reachable nodes
     best_paths = get_best_paths(G, source)
     # Step 2: Realign spectra along the best paths and update edges
