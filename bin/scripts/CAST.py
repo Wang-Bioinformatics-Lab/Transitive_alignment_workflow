@@ -11,8 +11,8 @@ from typing import List, Tuple
 # matplotlib.use('Agg')
 # import matplotlib.pyplot as plt
 # import altair as alt
-# import plotly.express as px
-# import kaleido
+import plotly.express as px
+import kaleido
 
 import argparse
 import pickle
@@ -182,23 +182,23 @@ def CAST_cluster_greedy(G, theta):
         S = [x for x in S if x not in C]
     return P
 
-# def plot_debug(G_all_pairs):
-#     degree_sequence = sorted([d for n, d in G_all_pairs.degree()], reverse=True)
-#
-#     # Count the number of occurrences of each degree value
-#     degree_counts = collections.Counter(degree_sequence)
-#     degrees, counts = zip(*degree_counts.items())
-#     df = pd.DataFrame({
-#         'Degree': degrees,
-#         'Node Count': counts
-#     })
-#
-#     # Create a scatter plot using Plotly Express
-#     fig = px.scatter(df, x='Node Count', y='Degree', title='Node Count vs Degree Distribution',
-#                       labels={'x': 'Node Count', 'y': 'Degree'})
-#
-#     # Save the figure as a HTML file or display it
-#     fig.write_image('degree_loglog_plot.png',engine="kaleido")
+def plot_debug(G_all_pairs):
+    degree_sequence = sorted([d for n, d in G_all_pairs.degree()], reverse=True)
+
+    # Count the number of occurrences of each degree value
+    degree_counts = collections.Counter(degree_sequence)
+    degrees, counts = zip(*degree_counts.items())
+    df = pd.DataFrame({
+        'Degree': degrees,
+        'Node Count': counts
+    })
+
+    # Create a scatter plot using Plotly Express
+    fig = px.scatter(df, x='Node Count', y='Degree', title='Node Count vs Degree Distribution',
+                      labels={'x': 'Node Count', 'y': 'Degree'})
+
+    # Save the figure as a HTML file or display it
+    fig.write_image('degree_loglog_plot.png',engine="kaleido")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Using realignment method to reconstruct the network')
@@ -235,7 +235,7 @@ if __name__ == '__main__':
     logging.info(f"Original number of nodes:{original_nodes}", )
     logging.info(f"Network density:{network_density}")
 
-    # plot_debug(G_all_pairs)
+    plot_debug(G_all_pairs)
 
     alignment_results = load_transitive_alignment_results(transitive_alignment_folder)
     G_all_pairs = update_graph_with_alignment_results(G_all_pairs, alignment_results, min_score)
