@@ -7,11 +7,17 @@ params.input_pairs = './data/test/merged_pairs.tsv'
 params.input_spectra = './data/test/specs_ms.mgf'
 params.n_chunks = 100
 params.input_graphml = "./data/test/network.graphml"
+params.workflow_option = "Induced_network"
 
 // Topology Filtering
 params.topology_cliquemincosine = 0.65
 params.networking_min_cosine = 0.4
 params.mst_filter = "Yes"
+
+// Induced network
+params.source_node = 672
+params.max_hops = 4
+params.induced_networking_min_cosine = 0.3
 
 process Partition {
     conda "$baseDir/bin/conda_env.yml"
@@ -116,6 +122,41 @@ process recreateGraphML {
     """
 }
 
+process InducedNetwork {
+    publishDir "./nf_output/", mode: 'copy'
+
+    conda "$TOOL_FOLDER/conda_env.yml"
+
+    cache false
+
+    input:
+    file merged_pairs
+    file input_mgf
+    file input_graphml
+    file spec_dic
+
+
+    output:
+    file "network"
+    file "spectra"
+
+    """
+    mkdir spectra
+    cp ${input_mgf} spectra/specs_ms.mgf
+
+    mkdir network
+    python $TOOL_FOLDER/scripts/induced_network.py \
+    -m ${merged_pairs} \
+    -s $params.source_node \
+    -g ${input_graphml} \
+    --max_hops $params.max_hops \
+    --spec_dic ${spec_dic} \
+    --minimum_score $params.induced_networking_min_cosine \
+    network/network.graphml
+    """
+}
+
+
 workflow {
 
     // Input channels
@@ -129,20 +170,26 @@ workflow {
     // Transitive alignment using generated chunk files and spectral dictionary
     chunk_files_ch = Partition(merged_pairs_ch, params.n_chunks)
     spec_dic_ch = Preprocessing(specs_mgf_ch)
-    trans_align_ch = TransitiveAlignment(chunk_files_ch.flatten().combine(spec_dic_ch).combine(merged_pairs_ch))
+    if (params.workflow_option == 'Transitive_alignment'){
+        trans_align_ch = TransitiveAlignment(chunk_files_ch.flatten().combine(spec_dic_ch).combine(merged_pairs_ch))
 
-    trans_align_dir_ch = trans_align_ch.collect()
+        trans_align_dir_ch = trans_align_ch.collect()
 
-    // Filtering the network
-    (filtered_networking_pairs_ch,debug_info_ch,debug_plot_ch) = CAST(trans_align_dir_ch, merged_pairs_ch)
-    // Creating graphml
-    input_graphml_ch = Channel.fromPath(params.input_graphml)
-    recreateGraphML(specs_mgf_ch, input_graphml_ch, filtered_networking_pairs_ch)
-    // print out the debug info
-    debug_info_ch.subscribe { file ->
-        println("Debug info from CAST process:")
-        file.readLines().each { line ->
-            println(line)
+        // Filtering the network
+        (filtered_networking_pairs_ch,debug_info_ch,debug_plot_ch) = CAST(trans_align_dir_ch, merged_pairs_ch)
+        // Creating graphml
+        input_graphml_ch = Channel.fromPath(params.input_graphml)
+        recreateGraphML(specs_mgf_ch, input_graphml_ch, filtered_networking_pairs_ch)
+        // print out the debug info
+        debug_info_ch.subscribe { file ->
+            println("Debug info from CAST process:")
+            file.readLines().each { line ->
+                println(line)
+            }
         }
+    }
+    else if (params.workflow_option == 'Induced_network'){
+        input_graphml_ch = Channel.fromPath(params.input_graphml)
+        InducedNetwork(merged_pairs_ch,specs_mgf_ch,input_graphml_ch,spec_dic_ch)
     }
 }
