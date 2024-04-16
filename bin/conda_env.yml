@@ -12,3 +12,5 @@ dependencies:
     - networkx
     - pyteomics
     - pyyaml
+    - plotly
+    - kaleido
