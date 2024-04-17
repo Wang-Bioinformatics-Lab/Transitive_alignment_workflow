@@ -257,7 +257,7 @@ def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hop
                 continue
             # Check if the new score is above the threshold and the edge does not exist
             if realigned_score >= score_threshold and not G.has_edge(source, target):
-                G.add_edge(source, target, Cosine=realigned_score)
+                G.add_edge(source, target, Cosine=realigned_score, trans_align_score = realigned_score)
         except Exception as e:
             print(f"An error occurred: {e}")
             print(path)
@@ -337,6 +337,9 @@ if __name__ == '__main__':
         G[str(node1)][str(node2)]["scan1"] = 0
         G[str(node1)][str(node2)]["scan2"] = 0
         G[str(node1)][str(node2)]["component"] = "N/A"
+        # Check if edge has 'trans_align_score' attribute in induced_subgraph and update it in G
+        if 'trans_align_score' in induced_subgraph[node1][node2]:
+            G[str(node1)][str(node2)]["trans_align_score"] = induced_subgraph[node1][node2]['trans_align_score']
 
     G = remove_singletons(G)
     # write the graphml file
