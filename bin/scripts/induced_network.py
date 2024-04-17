@@ -204,7 +204,7 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
                 continue
             # Check if the new score is above the threshold and the edge does not exist
             if realigned_score >= score_threshold and not G.has_edge(source, target):
-                G.add_edge(source, target, Cosine=realigned_score)
+                G.add_edge(source, target, Cosine=realigned_score, trans_align_score = realigned_score)
                 tran_align_node_list.append(target)
         except Exception as e:
             print(f"An error occurred: {e}")
