@@ -334,8 +334,8 @@ if __name__ == '__main__':
         G[str(node1)][str(node2)]["deltamz_int"] = int(abs(G.nodes[str(node1)]['mz'] - G.nodes[str(node2)]['mz']))
         G[str(node1)][str(node2)]["score"] = score
         G[str(node1)][str(node2)]["matched_peaks"] = "0"
-        G[str(node1)][str(node2)]["scan1"] = 0
-        G[str(node1)][str(node2)]["scan2"] = 0
+        G[str(node1)][str(node2)]["scan1"] = node1
+        G[str(node1)][str(node2)]["scan2"] = node2
         G[str(node1)][str(node2)]["component"] = "N/A"
         # Check if edge has 'trans_align_score' attribute in induced_subgraph and update it in G
         if 'trans_align_score' in induced_subgraph[node1][node2]:
