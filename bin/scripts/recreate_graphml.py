@@ -4,7 +4,10 @@ import argparse
 import networkx as nx
 import pandas as pd
 
-
+def remove_singletons(G):
+    singletons = [node for node, degree in dict(G.degree()).items() if degree == 0]
+    G.remove_nodes_from(singletons)
+    return G
 def main():
     # pass arguments
     parser = argparse.ArgumentParser(description='Using realignment method to reconstruct the network')
@@ -73,6 +76,8 @@ def main():
 
         # Increment component_label for the next component
         component_label += 1
+
+    G = remove_singletons(G)
     # write the graphml file
     nx.write_graphml(G, output_graphml)
 
