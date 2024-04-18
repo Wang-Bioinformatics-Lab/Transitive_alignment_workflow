@@ -7,7 +7,7 @@ params.input_pairs = './data/test/merged_pairs.tsv'
 params.input_spectra = './data/test/specs_ms.mgf'
 params.n_chunks = 100
 params.input_graphml = "./data/test/network.graphml"
-params.workflow_option = "Induced_network"
+params.workflow_option = "Transitive_alignment"
 
 // Topology Filtering
 params.topology_cliquemincosine = 0.65
@@ -81,7 +81,7 @@ process CAST {
     output:
     file "filtered_pairs.tsv"
     path "python_debug.log"
-    //file "degree_loglog_plot.png"
+    file "degree_loglog_plot.png"
 
     script:
     """
@@ -178,7 +178,7 @@ workflow {
         trans_align_dir_ch = trans_align_ch.collect()
 
         // Filtering the network
-        (filtered_networking_pairs_ch,debug_info_ch) = CAST(trans_align_dir_ch, merged_pairs_ch)
+        (filtered_networking_pairs_ch,debug_info_ch,debug_plot_ch) = CAST(trans_align_dir_ch, merged_pairs_ch)
         // Creating graphml
         input_graphml_ch = Channel.fromPath(params.input_graphml)
         recreateGraphML(specs_mgf_ch, input_graphml_ch, filtered_networking_pairs_ch)

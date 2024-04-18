@@ -2,8 +2,9 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.8.8
+  - python=3.9
   - pandas
+  - plotly
   - pip:
     - xmltodict
     - requests
@@ -12,3 +13,4 @@ dependencies:
     - networkx
     - pyteomics
     - pyyaml
+    - kaleido
