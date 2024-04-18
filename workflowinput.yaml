@@ -105,7 +105,7 @@ parameterlist:
       paramtype: text
       nf_paramname: max_hops
       formplaceholder: Enter the Max Hops
-      formvalue: "4"
+      formvalue: "5"
 
     - displayname: Induced Network Param - Min Transitive Alignment Score
       paramtype: text
