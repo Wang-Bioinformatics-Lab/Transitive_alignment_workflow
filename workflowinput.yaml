@@ -46,7 +46,7 @@ parameterlist:
     - displayname: Workflow Option
       paramtype: select
       nf_paramname: workflow_option
-      formvalue: "Transitive_alignment"
+      formvalue: "Induced Network"
       options:
         - value: "Transitive_alignment"
           display: "Full Network Transitive Alignment"
