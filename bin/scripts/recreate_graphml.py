@@ -4,7 +4,10 @@ import argparse
 import networkx as nx
 import pandas as pd
 
-
+def remove_singletons(G):
+    singletons = [node for node, degree in dict(G.degree()).items() if degree == 0]
+    G.remove_nodes_from(singletons)
+    return G
 def main():
     # pass arguments
     parser = argparse.ArgumentParser(description='Using realignment method to reconstruct the network')
@@ -49,8 +52,8 @@ def main():
         G[str(node1)][str(node2)]["deltamz_int"] = int(abs(G.nodes[str(node1)]['mz'] - G.nodes[str(node2)]['mz']))
         G[str(node1)][str(node2)]["score"] = score
         G[str(node1)][str(node2)]["matched_peaks"] = "0"
-        G[str(node1)][str(node2)]["scan1"] = 0
-        G[str(node1)][str(node2)]["scan2"] = 0
+        G[str(node1)][str(node2)]["scan1"] = node1
+        G[str(node1)][str(node2)]["scan2"] = node2
         G[str(node1)][str(node2)]["component"] = "N/A"
 
     # Identify all connected components
@@ -73,6 +76,8 @@ def main():
 
         # Increment component_label for the next component
         component_label += 1
+
+    G = remove_singletons(G)
     # write the graphml file
     nx.write_graphml(G, output_graphml)
 

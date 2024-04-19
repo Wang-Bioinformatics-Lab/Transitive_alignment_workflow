@@ -1,7 +1,7 @@
 workflowname: Transitive_alignment_workflow
 workflowdescription: Transitive_alignment_workflow
 workflowlongdescription: Transitive_alignment_workflow
-workflowversion: "0.3"
+workflowversion: "0.4"
 workflowfile: nf_workflow.nf
 workflowautohide: false
 adminonly: false
@@ -40,6 +40,19 @@ parameterlist:
       selectsinglefile: true
       folderunroll: true
 
+    - displayname: Workflow Configuration
+      paramtype: section
+
+    - displayname: Workflow Option
+      paramtype: select
+      nf_paramname: workflow_option
+      formvalue: "Induced_network"
+      options:
+        - value: "Transitive_alignment"
+          display: "Full Network Transitive Alignment"
+        - value: "Induced_network"
+          display: "Induced Network"
+
     - displayname: Network Topology Parameters
       paramtype: section
 
@@ -68,3 +81,34 @@ parameterlist:
           display: "Hybrid MST"
         - value: "No"
           display: "No"
+
+    - displayname: Induced Network Parameters
+      paramtype: section
+
+    - displayname: Induced Network Param - Option
+      paramtype: select
+      nf_paramname: induced_network_option
+      formvalue: "intersection"
+      options:
+        - value: "intersection"
+          display: "Intersection the Transitive and Max hops"
+        - value: "union"
+          display: "Union the Transitive and Max hops"
+
+    - displayname: Induced Network Param - Source node
+      paramtype: text
+      nf_paramname: source_node
+      formplaceholder: Enter the score node number
+      formvalue: "1000"
+
+    - displayname: Induced Network Param - Max Hops
+      paramtype: text
+      nf_paramname: max_hops
+      formplaceholder: Enter the Max Hops
+      formvalue: "5"
+
+    - displayname: Induced Network Param - Min Transitive Alignment Score
+      paramtype: text
+      nf_paramname: induced_networking_min_cosine
+      formplaceholder: Enter the Min induced_networking_min_cosine
+      formvalue: "0.3"
