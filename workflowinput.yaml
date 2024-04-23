@@ -56,6 +56,16 @@ parameterlist:
     - displayname: Network Topology Parameters
       paramtype: section
 
+    - displayname: Transitive Alignment Option
+      paramtype: select
+      nf_paramname: transitive_option
+      formvalue: "CAST"
+      options:
+        - value: "CAST"
+          display: "CAST"
+        - value: "infomap"
+          display: "infomap"
+
     - displayname: Transitive Param - Min Clique Cosine
       paramtype: text
       nf_paramname: topology_cliquemincosine
