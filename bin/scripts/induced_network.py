@@ -385,7 +385,7 @@ if __name__ == '__main__':
     elif (MST_filter=="Greedy_MST"):
         induced_subgraph = polish_subgraph_Geedy_MST(induced_subgraph)
     elif (MST_filter=="Hybrid_MST"):
-        induced_subgraphs = polish_subgraph_hybrid_MST(induced_subgraph)
+        induced_subgraph = polish_subgraph_hybrid_MST(induced_subgraph)
 
     G = nx.read_graphml(input_graphml)
 
