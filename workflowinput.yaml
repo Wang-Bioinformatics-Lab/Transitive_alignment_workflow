@@ -113,7 +113,7 @@ parameterlist:
       formplaceholder: Enter the Min induced_networking_min_cosine
       formvalue: "0.3"
 
-    - displayname: MST filter option
+    - displayname: Induced Network Param - MST filter option
       paramtype: select
       nf_paramname: induced_mst_filter
       formvalue: "No"
