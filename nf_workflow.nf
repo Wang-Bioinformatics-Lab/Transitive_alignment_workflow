@@ -141,6 +141,7 @@ process InducedNetwork {
     output:
     file "network"
     file "spectra"
+    file "trans_pairs.tsv"
 
     """
     mkdir spectra

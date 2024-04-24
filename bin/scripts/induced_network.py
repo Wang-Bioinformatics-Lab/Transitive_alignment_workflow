@@ -161,6 +161,7 @@ def realign_path(path,spec_dic):
 
 
 def induced_transitive_network_intersection(G, source, spec_dic, score_threshold=0.3, max_hops=3):
+    pair_extra_info = {}
     """
     Realigns nodes in the network starting from a source node based on the shortest path with conditions.
     Args:
@@ -206,6 +207,15 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
             if realigned_score >= score_threshold and not G.has_edge(source, target):
                 G.add_edge(source, target, Cosine=realigned_score, trans_align_score = realigned_score)
                 tran_align_node_list.append(target)
+                spec_1 = spec_dic[source]
+                spec_2 = spec_dic[target]
+                original_score, peak_matches = _cosine_fast(spec_1, spec_2, 0.5, True)
+                pair_extra_info[(source, target)] = {
+                    'original_cosine':original_score,
+                    'trans_align_score': realigned_score,
+                    'min_hops': len(nx.shortest_path(G_all_pairs, source, target)) - 1
+                }
+
         except Exception as e:
             print(f"An error occurred: {e}")
             print(path)
@@ -216,9 +226,10 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
     induced_nodes_list = list(uni_trans_set & set(subgraph_list))
     induced_subgraph = G.subgraph(induced_nodes_list).copy()
 
-    return induced_subgraph
+    return induced_subgraph, pair_extra_info
 
 def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hops=3):
+    pair_extra_info = {}
     """
     Realigns nodes in the network starting from a source node based on the shortest path with conditions.
     Args:
@@ -258,6 +269,14 @@ def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hop
             # Check if the new score is above the threshold and the edge does not exist
             if realigned_score >= score_threshold and not G.has_edge(source, target):
                 G.add_edge(source, target, Cosine=realigned_score, trans_align_score = realigned_score)
+                spec_1 = spec_dic[source]
+                spec_2 = spec_dic[target]
+                original_score, peak_matches = _cosine_fast(spec_1, spec_2, 0.5, True)
+                pair_extra_info[(source, target)] = {
+                    'original_cosine': original_score,
+                    'trans_align_score': realigned_score,
+                    'min_hops': len(nx.shortest_path(G_all_pairs, source, target)) - 1
+                }
         except Exception as e:
             print(f"An error occurred: {e}")
             print(path)
@@ -265,7 +284,7 @@ def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hop
     # Step 3: Generate the induced subgraph within max_hops from the source
     nodes_within_hops = nx.single_source_shortest_path_length(G, source, cutoff=max_hops)
     induced_subgraph = G.subgraph(nodes_within_hops).copy()
-    return induced_subgraph
+    return induced_subgraph, pair_extra_info
 
 def remove_singletons(G):
     singletons = [node for node, degree in dict(G.degree()).items() if degree == 0]
@@ -374,11 +393,11 @@ if __name__ == '__main__':
     with open(spec_dic_path, 'rb') as input_file:
         spec_dic = pickle.load(input_file)
     if induced_option == "intersection":
-        induced_subgraph = induced_transitive_network_intersection(G_all_pairs,source,spec_dic,min_score,max_hops)
+        induced_subgraph, pair_extra_info = induced_transitive_network_intersection(G_all_pairs,source,spec_dic,min_score,max_hops)
     elif induced_option == "union":
-        induced_subgraph = induced_transitive_network(G_all_pairs,source,spec_dic,min_score,max_hops)
+        induced_subgraph, pair_extra_info = induced_transitive_network(G_all_pairs,source,spec_dic,min_score,max_hops)
     else:
-        induced_subgraph = induced_transitive_network_intersection(G_all_pairs,source,spec_dic,min_score,max_hops)
+        induced_subgraph, pair_extra_info = induced_transitive_network_intersection(G_all_pairs,source,spec_dic,min_score,max_hops)
 
     if (MST_filter=="Pure_MST"):
         induced_subgraph = polish_subgraph_Pure_MST(induced_subgraph)
@@ -417,5 +436,30 @@ if __name__ == '__main__':
     G = remove_singletons(G)
     # write the graphml file
     nx.write_graphml(G, output_graphml)
+
+    relevant_pairs = {
+        k: v for k, v in pair_extra_info.items() if k[0] == source and 'trans_align_score' in v
+    }
+
+    # Prepare data for DataFrame
+    data = []
+    for (src, tgt), info in relevant_pairs.items():
+        original_cosine_score, _ = _cosine_fast(spec_dic[src], spec_dic[tgt], 0.5, True)
+        row = [
+            src,
+            tgt,
+            info['min_hops'],
+            original_cosine_score,
+            info['trans_align_score'],
+            info['trans_align_score'] - original_cosine_score
+        ]
+        data.append(row)
+
+    # Create DataFrame
+    columns = ['Source Node', 'Target Node', 'Min Hops', 'Original Cosine', 'Transitive Alignment Score', 'Delta Score']
+    df = pd.DataFrame(data, columns=columns)
+
+    # Save to TSV
+    df.to_csv("trans_pairs.tsv", sep='\t', index=False)
 
 
