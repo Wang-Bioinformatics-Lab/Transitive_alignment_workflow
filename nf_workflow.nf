@@ -160,7 +160,6 @@ process InducedNetwork {
     """
 }
 
-
 workflow {
 
     // Input channels
