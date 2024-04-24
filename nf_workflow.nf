@@ -19,7 +19,7 @@ params.source_node = 672
 params.max_hops = 4
 params.induced_networking_min_cosine = 0.3
 params.induced_network_option = "intersection"
-params.induced_mst_filter = "Pure_MST"
+params.induced_mst_filter = "Hybrid_MST"
 
 process Partition {
     conda "$baseDir/bin/conda_env.yml"
