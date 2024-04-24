@@ -19,7 +19,7 @@ params.source_node = 672
 params.max_hops = 4
 params.induced_networking_min_cosine = 0.3
 params.induced_network_option = "intersection"
-params.induced_mst_filter = "Greedy_MST"
+params.induced_mst_filter = "Pure_MST"
 
 process Partition {
     conda "$baseDir/bin/conda_env.yml"
@@ -155,7 +155,7 @@ process InducedNetwork {
     --spec_dic ${spec_dic} \
     --minimum_score $params.induced_networking_min_cosine \
     --induced_option $params.induced_network_option \
-    --mst_filter $params.mst_filter \
+    --mst_filter $params.induced_mst_filter \
     network/network.graphml
     """
 }
