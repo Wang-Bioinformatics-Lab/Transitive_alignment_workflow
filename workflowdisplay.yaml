@@ -18,8 +18,6 @@ Views:
     parameters:
         filename: nf_output/trans_pairs.tsv
         columns:
-            -   title: "View"
-                data:
             -   title: "Source_Node"
                 data: Source_Node
             -   title: "Target_Node"
