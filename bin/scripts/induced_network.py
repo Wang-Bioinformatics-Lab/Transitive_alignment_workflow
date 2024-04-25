@@ -213,7 +213,8 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
                 pair_extra_info[(source, target)] = {
                     'original_cosine':original_score,
                     'trans_align_score': realigned_score,
-                    'min_hops': len(best_paths[target]) - 1
+                    'min_hops': len(best_paths[target]) - 1,
+                    're-aligned_paths': best_paths[target]
                 }
 
         except Exception as e:
@@ -275,7 +276,8 @@ def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hop
                 pair_extra_info[(source, target)] = {
                     'original_cosine': original_score,
                     'trans_align_score': realigned_score,
-                    'min_hops': len(best_paths[target]) - 1
+                    'min_hops': len(best_paths[target]) - 1,
+                    're-aligned_paths': best_paths[target]
                 }
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -451,12 +453,13 @@ if __name__ == '__main__':
             info['min_hops'],
             original_cosine_score,
             info['trans_align_score'],
-            info['trans_align_score'] - original_cosine_score
+            info['trans_align_score'] - original_cosine_score,
+            info['re-aligned_paths']
         ]
         data.append(row)
 
     # Create DataFrame
-    columns = ['Source_Node', 'Target_Node', 'Distance', 'Original_Cosine', 'Transitive_Alignment_Score', 'Delta_Score']
+    columns = ['Source_Node', 'Target_Node', 'Distance', 'Original_Cosine', 'Transitive_Alignment_Score', 'Delta_Score','Re-aligned_paths']
     df = pd.DataFrame(data, columns=columns)
 
     # Save to TSV

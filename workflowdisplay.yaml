@@ -30,3 +30,5 @@ Views:
                 data: Transitive_Alignment_Score
             -   title: "Delta_Score"
                 data: Delta_Score
+            -   title: "Re-aligned_paths"
+                data: Re-aligned_paths
