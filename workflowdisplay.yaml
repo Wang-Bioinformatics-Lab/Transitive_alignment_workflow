@@ -10,3 +10,25 @@ Views:
         urlparam:
             -   usi:mzdata:OMETATASK-[task]:nf_output/network/network.graphml
             -   usi-mgf:mzdata:OMETATASK-[task]:nf_output/spectra/specs_ms.mgf
+
+-   name: Transitive Pairs List
+    displayname: Transitive Pairs List
+    viewname: pairslist
+    displaytype: datatable_serverbig
+    parameters:
+        filename: nf_output/trans_pairs.tsv
+        columns:
+            -   title: "View"
+                data:
+            -   title: "Source_Node"
+                data: Source_Node
+            -   title: "Target_Node"
+                data: Target_Node
+            -   title: "Distance"
+                data: Distance
+            -   title: "Original_Cosine"
+                data: Original_Cosine
+            -   title: "Transitive_Alignment_Score"
+                data: Transitive_Alignment_Score
+            -   title: "Delta_Score"
+                data: Delta_Score
