@@ -161,7 +161,6 @@ def realign_path(path,spec_dic):
 
 
 def induced_transitive_network_intersection(G, source, spec_dic, score_threshold=0.3, max_hops=3):
-    G_copy = G.copy()
     pair_extra_info = {}
     """
     Realigns nodes in the network starting from a source node based on the shortest path with conditions.
@@ -231,7 +230,6 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
 
 def induced_transitive_network(G, source, spec_dic, score_threshold=0.3, max_hops=3):
     pair_extra_info = {}
-    G_copy = G.copy()
     """
     Realigns nodes in the network starting from a source node based on the shortest path with conditions.
     Args:
