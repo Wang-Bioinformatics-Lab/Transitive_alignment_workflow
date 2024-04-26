@@ -7,12 +7,12 @@ params.input_pairs = './data/test/merged_pairs.tsv'
 params.input_spectra = './data/test/specs_ms.mgf'
 params.n_chunks = 100
 params.input_graphml = "./data/test/network.graphml"
-params.workflow_option = "Transitive_alignment"
+params.workflow_option = "Induced_network"
 
 // Topology Filtering
 params.topology_cliquemincosine = 0.65
 params.networking_min_cosine = 0.4
-params.mst_filter = "Yes"
+params.mst_filter = "Greedy_MST"
 params.transitive_option = "infomap"
 
 // Induced network
@@ -20,6 +20,7 @@ params.source_node = 672
 params.max_hops = 4
 params.induced_networking_min_cosine = 0.3
 params.induced_network_option = "intersection"
+params.induced_mst_filter = "Hybrid_MST"
 
 process Partition {
     conda "$baseDir/bin/conda_env.yml"
@@ -164,6 +165,7 @@ process InducedNetwork {
     output:
     file "network"
     file "spectra"
+    file "trans_pairs.tsv"
 
     """
     mkdir spectra
@@ -178,10 +180,10 @@ process InducedNetwork {
     --spec_dic ${spec_dic} \
     --minimum_score $params.induced_networking_min_cosine \
     --induced_option $params.induced_network_option \
+    --mst_filter $params.induced_mst_filter \
     network/network.graphml
     """
 }
-
 
 workflow {
 
