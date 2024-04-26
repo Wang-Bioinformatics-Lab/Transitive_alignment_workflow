@@ -1,7 +1,7 @@
 workflowname: Transitive_alignment_workflow
 workflowdescription: Transitive_alignment_workflow
 workflowlongdescription: Transitive_alignment_workflow
-workflowversion: "0.4"
+workflowversion: "0.4.1"
 workflowfile: nf_workflow.nf
 workflowautohide: false
 adminonly: false
@@ -112,3 +112,17 @@ parameterlist:
       nf_paramname: induced_networking_min_cosine
       formplaceholder: Enter the Min induced_networking_min_cosine
       formvalue: "0.3"
+
+    - displayname: Induced Network Param - MST filter option
+      paramtype: select
+      nf_paramname: induced_mst_filter
+      formvalue: "No"
+      options:
+        - value: "Pure_MST"
+          display: "Pure MST"
+        - value: "Greedy_MST"
+          display: "Greedy MST"
+        - value: "Hybrid_MST"
+          display: "Hybrid MST"
+        - value: "No"
+          display: "No"
