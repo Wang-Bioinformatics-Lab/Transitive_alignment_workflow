@@ -1,5 +1,5 @@
 #!/usr/bin/env nextflow
-nextflow.enable.dsl=2
+nextflow.preview.dsl=2
 
 TOOL_FOLDER = "$baseDir/bin"
 
