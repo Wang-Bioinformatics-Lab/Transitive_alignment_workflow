@@ -214,8 +214,7 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
                     'original_cosine':original_score,
                     'trans_align_score': realigned_score,
                     'min_hops': len(best_paths[target]) - 1,
-                    're-aligned_paths': best_paths[target],
-                    'Cosine':realigned_score
+                    're-aligned_paths': best_paths[target]
                 }
 
         except Exception as e:
@@ -334,24 +333,36 @@ def polish_subgraph_hybrid_MST(G):
     )
     mst = nx.maximum_spanning_tree(original_edges_graph, weight='Cosine')
 
-    # Check if the MST spans all nodes, if not, start adding transitive edges
-    if len(mst.nodes()) < len(G.nodes()):
+    nodes_to_connect = set(G.nodes()) - set(mst.nodes())
+
+    if nodes_to_connect:
         print("Original edges do not span all nodes, adding transitive edges as needed.")
-        nodes_to_connect = set(G.nodes()) - set(mst.nodes())
 
-        while nodes_to_connect:
-            connected_nodes = set(mst.nodes())
+    while nodes_to_connect:
+        connected_nodes = set(mst.nodes())
+        candidate_edges = [
+            (u, v, G[u][v]) for u in connected_nodes for v in G.neighbors(u)
+            if v in nodes_to_connect and 'trans_align_score' in G[u][v]
+        ]
+        if not candidate_edges:
+            print("No candidate edges found, adding all transitive edges to ensure connectivity.")
             candidate_edges = [
-                (u, v, G[u][v]) for u in connected_nodes for v in nodes_to_connect if G.has_edge(u, v)
+                (u, v, G[u][v]) for u in connected_nodes for v in nodes_to_connect
+                if G.has_edge(u, v) and 'trans_align_score' in G[u][v]
             ]
-            if not candidate_edges:
-                break
+        if not candidate_edges:
+            print("Still no candidate edges found, breaking out of loop to avoid infinite loop.")
+            break
 
-            candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
-            best_edge = candidate_edges[0]
-            mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
-            nodes_to_connect -= {best_edge[0], best_edge[1]}
+        candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
+        best_edge = candidate_edges[0]
+        mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
+        nodes_to_connect -= {best_edge[0], best_edge[1]}
 
+    # Ensure all nodes are in the MST
+    for node in G.nodes():
+        if node not in mst.nodes():
+            mst.add_node(node)
 
     return mst
 
