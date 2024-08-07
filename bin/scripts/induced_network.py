@@ -214,7 +214,8 @@ def induced_transitive_network_intersection(G, source, spec_dic, score_threshold
                     'original_cosine':original_score,
                     'trans_align_score': realigned_score,
                     'min_hops': len(best_paths[target]) - 1,
-                    're-aligned_paths': best_paths[target]
+                    're-aligned_paths': best_paths[target],
+                    'Cosine':realigned_score
                 }
 
         except Exception as e:
