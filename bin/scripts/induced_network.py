@@ -343,7 +343,7 @@ def polish_subgraph_hybrid_MST(G):
                 # Find all edges connecting this node to any node in the MST
                 candidate_edges = [
                     (u, v, d) for u, v, d in G.edges(node, data=True)
-                    if 'trans_align_score' in d and (u in mst.nodes() or v in mst.nodes())
+                    if (u in mst.nodes() or v in mst.nodes())
                 ]
                 # Sort these edges by weight (assuming higher is better)
                 candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
