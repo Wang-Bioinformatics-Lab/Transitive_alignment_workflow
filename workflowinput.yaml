@@ -116,7 +116,7 @@ parameterlist:
     - displayname: Induced Network Param - MST filter option
       paramtype: select
       nf_paramname: induced_mst_filter
-      formvalue: "Greedy_MST"
+      formvalue: "Hybrid MST"
       options:
         - value: "Pure_MST"
           display: "Pure MST"
