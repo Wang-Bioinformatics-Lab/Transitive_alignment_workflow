@@ -60,7 +60,7 @@ parameterlist:
       paramtype: text
       nf_paramname: topology_cliquemincosine
       formplaceholder: Enter the topology_cliquemincosine
-      formvalue: "0.7"
+      formvalue: "0.65"
 
     - displayname: Transitive Param - Min Transitive Alignment Score
       paramtype: text
@@ -71,7 +71,7 @@ parameterlist:
     - displayname: MST filter option
       paramtype: select
       nf_paramname: mst_filter
-      formvalue: "No"
+      formvalue: "Hybrid_MST"
       options:
         - value: "Pure_MST"
           display: "Pure MST"
@@ -105,18 +105,18 @@ parameterlist:
       paramtype: text
       nf_paramname: max_hops
       formplaceholder: Enter the Max Hops
-      formvalue: "5"
+      formvalue: "3"
 
     - displayname: Induced Network Param - Min Transitive Alignment Score
       paramtype: text
       nf_paramname: induced_networking_min_cosine
       formplaceholder: Enter the Min induced_networking_min_cosine
-      formvalue: "0.3"
+      formvalue: "0.5"
 
     - displayname: Induced Network Param - MST filter option
       paramtype: select
       nf_paramname: induced_mst_filter
-      formvalue: "No"
+      formvalue: "Hybrid_MST"
       options:
         - value: "Pure_MST"
           display: "Pure MST"
