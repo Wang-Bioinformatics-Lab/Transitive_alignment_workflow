@@ -333,37 +333,24 @@ def polish_subgraph_hybrid_MST(G):
     )
     mst = nx.maximum_spanning_tree(original_edges_graph, weight='Cosine')
 
-    nodes_to_connect = set(G.nodes()) - set(mst.nodes())
-
-    if nodes_to_connect:
+    # Check if the MST spans all nodes, if not, start adding transitive edges
+    if len(mst.nodes()) < len(G.nodes()):
         print("Original edges do not span all nodes, adding transitive edges as needed.")
+        nodes_to_connect = set(G.nodes()) - set(mst.nodes())
 
-    while nodes_to_connect:
-        connected_nodes = set(mst.nodes())
-        candidate_edges = [
-            (u, v, G[u][v]) for u in connected_nodes for v in G.neighbors(u)
-            if v in nodes_to_connect and 'trans_align_score' in G[u][v]
-        ]
-        if not candidate_edges:
-            print("No candidate edges found, adding all transitive edges to ensure connectivity.")
-            candidate_edges = [
-                (u, v, G[u][v]) for u in connected_nodes for v in nodes_to_connect
-                if G.has_edge(u, v) and 'trans_align_score' in G[u][v]
-            ]
-        if not candidate_edges:
-            print("Still no candidate edges found, breaking out of loop to avoid infinite loop.")
-            break
+        while nodes_to_connect:
+            connected_nodes = set(mst.nodes())
+            for node in list(connected_nodes):
+                candidate_edges = [(node,v,G[node][v]) for v in connected_nodes if G.has_edge(node, v)]
 
-        candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
-        best_edge = candidate_edges[0]
-        mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
-        nodes_to_connect -= {best_edge[0], best_edge[1]}
+                if not candidate_edges:
+                    break
 
-    # Ensure all nodes are in the MST
-    for node in G.nodes():
-        if node not in mst.nodes():
-            mst.add_node(node)
-
+                candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
+                best_edge = candidate_edges[0]
+                mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
+                nodes_to_connect -= {best_edge[0], best_edge[1]}
+                connected_nodes += {best_edge[0], best_edge[1]}
     return mst
 
 if __name__ == '__main__':
