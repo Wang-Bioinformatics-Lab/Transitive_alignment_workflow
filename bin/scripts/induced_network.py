@@ -336,22 +336,21 @@ def polish_subgraph_hybrid_MST(G):
     # Check if the MST spans all nodes, if not, start adding transitive edges
     if len(mst.nodes()) < len(G.nodes()):
         print("Original edges do not span all nodes, adding transitive edges as needed.")
+        nodes_to_connect = set(G.nodes()) - set(mst.nodes())
 
-        # For each node not in the MST, try to connect it with the least number of transitive edges
-        for node in G.nodes():
-            if node not in mst.nodes():
-                # Find all transitive edges connecting this node to any node in the MST
-                candidate_edges = [
-                    (u, v, d) for u, v, d in G.edges(node, data=True)
-                    if 'trans_align_score' in G[u][v] and (u in mst.nodes() or v in mst.nodes())
-                ]
-                # Sort these edges by weight (assuming higher is better)
-                candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
+        while nodes_to_connect:
+            connected_nodes = set(mst.nodes())
+            candidate_edges = [
+                (u, v, G[u][v]) for u in connected_nodes for v in nodes_to_connect if G.has_edge(u, v)
+            ]
+            if not candidate_edges:
+                break
 
-                # Add the best edge to the MST, if any
-                if candidate_edges:
-                    best_edge = candidate_edges[0]
-                    mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
+            candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
+            best_edge = candidate_edges[0]
+            mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
+            nodes_to_connect -= {best_edge[0], best_edge[1]}
+
 
     return mst
 
