@@ -350,6 +350,7 @@ def polish_subgraph_hybrid_MST(G):
 
                 # Add the best edge to the MST, if any
                 if candidate_edges:
+                    mst.add_node(node)
                     best_edge = candidate_edges[0]
                     mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
 
