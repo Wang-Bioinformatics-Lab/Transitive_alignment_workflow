@@ -350,7 +350,7 @@ def polish_subgraph_hybrid_MST(G):
                 best_edge = candidate_edges[0]
                 mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
                 nodes_to_connect -= {best_edge[0], best_edge[1]}
-                connected_nodes += {best_edge[0], best_edge[1]}
+                connected_nodes = connected_nodes.union({best_edge[0], best_edge[1]})
     return mst
 
 if __name__ == '__main__':
