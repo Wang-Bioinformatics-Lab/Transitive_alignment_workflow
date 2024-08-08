@@ -88,13 +88,9 @@ def polish_subgraph_Geedy_MST(G):
     return polished_subgraph
 
 def polish_subgraph_hybrid_MST(G):
-    # Create an MST with only original edges
-    original_edges_graph = nx.Graph(
-        (u, v, d) for u, v, d in G.edges(data=True) if d.get('origin') != 'transitive_alignment'
-    )
     # Extract subgraphs
-    no_trans_align_score_edges = [(u, v, d) for u, v, d in G.edges(data=True) if d.get('origin') != 'transitive_alignment']
-    trans_align_score_edges = [(u, v, d) for u, v, d in G.edges(data=True) if d.get('origin') == 'transitive_alignment']
+    no_trans_align_score_edges = [(u, v, d) for u, v, d in G.edges(data=True) if (d.get('origin') != 'transitive_alignment')]
+    trans_align_score_edges = [(u, v, d) for u, v, d in G.edges(data=True) if (d.get('origin') == 'transitive_alignment')]
     trans_align_score_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
     # Create a graph with edges that do not have the 'trans_align_score' attribute
     G_no_trans_align_score = nx.Graph()
