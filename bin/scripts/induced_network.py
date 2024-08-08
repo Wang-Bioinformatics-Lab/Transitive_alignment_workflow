@@ -336,7 +336,7 @@ def polish_subgraph_hybrid_MST(G):
     G_no_trans_align_score.add_edges_from(no_trans_align_score_edges)
 
     # Create MST from the graph without 'trans_align_score' edges
-    mst = nx.minimum_spanning_tree(G_no_trans_align_score)
+    mst = nx.maximum_spanning_tree(G_no_trans_align_score,weight='Cosine')
 
     if set(mst.nodes())!=set(G.nodes()):
         nodes_to_add = set(mst.nodes()) - set(G.nodes())
