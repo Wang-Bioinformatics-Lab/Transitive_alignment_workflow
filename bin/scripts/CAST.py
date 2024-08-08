@@ -104,7 +104,7 @@ def polish_subgraph_hybrid_MST(G):
     mst = nx.maximum_spanning_tree(G_no_trans_align_score,weight='Cosine')
 
     if set(mst.nodes())!=set(G.nodes()):
-        nodes_to_add = set(mst.nodes()) - set(G.nodes())
+        nodes_to_add = set(G.nodes()) - set(mst.nodes())
         mst.add_nodes_from(nodes_to_add)
 
     # Check if MST is connected
