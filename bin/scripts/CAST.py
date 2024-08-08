@@ -95,7 +95,7 @@ def polish_subgraph_hybrid_MST(G):
     # Extract subgraphs
     no_trans_align_score_edges = [(u, v, d) for u, v, d in G.edges(data=True) if d.get('origin') != 'transitive_alignment']
     trans_align_score_edges = [(u, v, d) for u, v, d in G.edges(data=True) if d.get('origin') == 'transitive_alignment']
-
+    trans_align_score_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
     # Create a graph with edges that do not have the 'trans_align_score' attribute
     G_no_trans_align_score = nx.Graph()
     G_no_trans_align_score.add_edges_from(no_trans_align_score_edges)
