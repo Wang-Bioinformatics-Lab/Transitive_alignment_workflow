@@ -88,31 +88,58 @@ def polish_subgraph_Geedy_MST(G):
     return polished_subgraph
 
 def polish_subgraph_hybrid_MST(G):
-    # Create an MST with only original edges
-    original_edges_graph = nx.Graph(
-        (u, v, d) for u, v, d in G.edges(data=True) if d.get('origin') != 'transitive_alignment'
-    )
-    mst = nx.maximum_spanning_tree(original_edges_graph, weight='Cosine')
+    # Extract subgraphs
+    no_trans_align_score_edges = [(u, v, d) for u, v, d in G.edges(data=True) if (d.get('origin') != 'transitive_alignment')]
+    trans_align_score_edges = [(u, v, d) for u, v, d in G.edges(data=True) if (d.get('origin') == 'transitive_alignment')]
+    trans_align_score_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
+    # Create a graph with edges that do not have the 'trans_align_score' attribute
+    G_no_trans_align_score = nx.Graph()
+    G_no_trans_align_score.add_edges_from(no_trans_align_score_edges)
 
-    # Check if the MST spans all nodes, if not, start adding transitive edges
-    if len(mst.nodes()) < len(G.nodes()):
-        print("Original edges do not span all nodes, adding transitive edges as needed.")
+    # Create MST from the graph without 'trans_align_score' edges
+    mst = nx.maximum_spanning_tree(G_no_trans_align_score,weight='Cosine')
 
-        # For each node not in the MST, try to connect it with the least number of transitive edges
+    if set(mst.nodes())!=set(G.nodes()):
+        nodes_to_add = set(G.nodes()) - set(mst.nodes())
+        mst.add_nodes_from(nodes_to_add)
+
+    # Check if MST is connected
+    if not (nx.is_connected(mst)):
+        # If not connected, create a union-find data structure
+        parent = {}
+        rank = {}
+
+        def find(node):
+            if parent[node] != node:
+                parent[node] = find(parent[node])
+            return parent[node]
+
+        def union(node1, node2):
+            root1 = find(node1)
+            root2 = find(node2)
+            if root1 != root2:
+                if rank[root1] > rank[root2]:
+                    parent[root2] = root1
+                else:
+                    parent[root1] = root2
+                    if rank[root1] == rank[root2]:
+                        rank[root2] += 1
+
+        # Initialize the union-find structure
         for node in G.nodes():
-            if node not in mst.nodes():
-                # Find all transitive edges connecting this node to any node in the MST
-                candidate_edges = [
-                    (u, v, d) for u, v, d in G.edges(node, data=True)
-                    if d.get('origin') == 'transitive_alignment' and (u in mst.nodes() or v in mst.nodes())
-                ]
-                # Sort these edges by weight (assuming higher is better)
-                candidate_edges.sort(key=lambda x: x[2]['Cosine'], reverse=True)
+            parent[node] = node
+            rank[node] = 0
 
-                # Add the best edge to the MST, if any
-                if candidate_edges:
-                    best_edge = candidate_edges[0]
-                    mst.add_edge(best_edge[0], best_edge[1], **best_edge[2])
+        for u, v in mst.edges():
+            union(u, v)
+
+        # Add edges with 'trans_align_score' to connect the MST
+        for u, v, d in trans_align_score_edges:
+            if find(u) != find(v):
+                mst.add_edge(u, v, **d)
+                union(u, v)
+                if nx.is_connected(mst):
+                    break
 
     return mst
 
