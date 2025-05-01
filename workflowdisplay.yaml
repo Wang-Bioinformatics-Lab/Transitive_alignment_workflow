@@ -11,8 +11,8 @@ Views:
             -   usi:mzdata:OMETATASK-[task]:nf_output/network/network.graphml
             -   usi-mgf:mzdata:OMETATASK-[task]:nf_output/spectra/specs_ms.mgf
 
--   name: Transitive Pairs List
-    displayname: Transitive Pairs List
+-   name: Induced Network Only - Transitive Pairs List
+    displayname: Induced Network Only - Transitive Pairs List
     viewname: pairslist
     displaytype: datatable_serverbig
     parameters:
